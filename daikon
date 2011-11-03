@@ -9,7 +9,8 @@ parser_main = argparse.ArgumentParser(description='ElasticSearch CLI')
 parser_main.add_argument('--version', action='version',
         version=VERSION)
 
-subparsers_main = parser_main.add_subparsers(title='subcommands', description='valid subcommands', help='additional help')
+subparsers_main = parser_main.add_subparsers(title='subcommands',
+        description='valid subcommands', help='additional help')
 
 # index
 
@@ -35,19 +36,17 @@ subparser_cluster = subparsers_main.add_parser('cluster')
 subparser_cluster = subparser_cluster.add_subparsers(title='subcommands',
         description='valid subcommands', help='additional help')
 
-#subparser_cluster.add_argument('--cluster')
-
 # cluster health
 
-#subparser_cluster.add_argument('health')
+subparser_cluster_health = subparser_cluster.add_parser('health')
 
 # cluster state
 
-#subparser_cluster.add_parser('state')
+subparser_cluster_state = subparser_cluster.add_parser('state')
 
 # cluster shutdown
 
-#subparser_cluster.add_parser('shutdown')
+subparser_cluster_shutdown = subparser_cluster.add_parser('shutdown')
 
 # nodes
 
