@@ -12,7 +12,7 @@ def configuration(cluster='default'):
         sys.exit(1)
 
     if not config.has_section(cluster):
-        sys.stderr.write("No cluster config section defined for this cluster!\n")
+        sys.stderr.write("No cluster section defined for this cluster!\n")
         sys.exit(1)
 
     host = config.get(cluster, 'host')
