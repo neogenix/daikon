@@ -6,13 +6,18 @@ from modules import es, config
 VERSION = '0.01'
 
 parser_main = argparse.ArgumentParser(description='ElasticSearch CLI')
-parser_main.add_argument('--cluster', action='store', help='Use a defined cluster name')
-parser_main.add_argument('--version', action='version', version=VERSION)
+parser_main.add_argument('--cluster', action='store',
+        help='Use a defined cluster name')
+parser_main.add_argument('--version', action='version',
+        version=VERSION)
 
-subparsers_main = parser_main.add_subparsers(title='subcommands', description='valid subcommands', help='additional help')
+subparsers_main = parser_main.add_subparsers(title='subcommands',
+        description='valid subcommands', help='additional help')
 
 subparser_index = subparsers_main.add_parser('index')
-subparser_index = subparser_index.add_subparsers(title='subcommands', description='valid subcommands', help='additional help')
+subparser_index = subparser_index.add_subparsers(title='subcommands',
+        description='valid subcommands', help='additional help')
+
 subparser_index_create = subparser_index.add_parser('create')
 subparser_index_delete = subparser_index.add_parser('delete')
 subparser_index_open = subparser_index.add_parser('open')
@@ -20,13 +25,17 @@ subparser_index_close = subparser_index.add_parser('close')
 subparser_index_health = subparser_index.add_parser('health')
 
 subparser_cluster = subparsers_main.add_parser('cluster')
-subparser_cluster = subparser_cluster.add_subparsers(title='subcommands', description='valid subcommands', help='additional help')
+subparser_cluster = subparser_cluster.add_subparsers(title='subcommands',
+        description='valid subcommands', help='additional help')
+
 subparser_cluster_health = subparser_cluster.add_parser('health')
 subparser_cluster_state = subparser_cluster.add_parser('state')
 subparser_cluster_shutdown = subparser_cluster.add_parser('shutdown')
 
 subparser_nodes = subparsers_main.add_parser('nodes')
-subparser_nodes = subparser_nodes.add_subparsers(title='subcommands', description='valid subcommands', help='additional help')
+subparser_nodes = subparser_nodes.add_subparsers(title='subcommands',
+        description='valid subcommands', help='additional help')
+
 subparser_nodes_stats = subparser_nodes.add_parser('stats')
 subparser_nodes_delay = subparser_nodes.add_parser('delay')
 subparser_nodes_shutdown = subparser_nodes.add_parser('shutdown')
