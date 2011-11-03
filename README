@@ -1,0 +1,3 @@
+Daikon is due to be a CLI for ElasticSearch to make some of the basic admin
+tasks associated with ElasticSearch a little easier than using curl... you know
+for us lazy folks.
