@@ -3,11 +3,9 @@ import sys
 import os.path
 
 config = ConfigParser.ConfigParser()
-config_files = config.read(['/etc/daikon/daikon.conf',
-               os.path.expanduser('~/.daikon.conf'),
-               'daikon.conf'])
 
-if not config_files:
+if not config.read(['/etc/daikon/daikon.conf',
+        os.path.expanduser('~/.daikon.conf'), 'daikon.conf']):
     sys.stderr.write("No config file found!\n")
     sys.exit(1)
 

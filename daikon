@@ -1,11 +1,16 @@
 #!/usr/bin/python
 
+VERSION = '0.01'
+
 import argparse
 from modules import es, config
 
 parser = argparse.ArgumentParser(description='ElasticSearch CLI')
 
-parser.add_argument('-c', action='store', help='Use a defined cluster name')
+parser.add_argument('--cluster', action='store',
+            help='Use a defined cluster name')
+
+parser.add_argument('--version', action='version',
+            version=VERSION)
 
 args = parser.parse_args()
-print args.accumulate(args.integers)
