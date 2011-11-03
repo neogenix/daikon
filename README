@@ -1,3 +1,18 @@
 Daikon is due to be a CLI for ElasticSearch to make some of the basic admin
 tasks associated with ElasticSearch a little easier than using curl... you know
 for us lazy folks.
+
+Functions:
+
+    * Working with Indexes
+        * Create Indexes
+        * Delete Indexes
+
+    * Working with Clusters
+        * Health View
+        * State View
+        * Shutdown Clusters
+
+    * Working with Nodes
+        * Stats
+        * Shutdown
