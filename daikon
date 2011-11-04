@@ -29,6 +29,8 @@ def main():
     subparser_index_create = subparser_index.add_parser('create')
     subparser_index_create.add_argument('indexname')
     subparser_index_create.add_argument('--cluster', default='default')
+    subparser_index_create.add_argument('--shards')
+    subparser_index_create.add_argument('--replicas')
 
     # index delete
 
