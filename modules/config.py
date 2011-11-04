@@ -3,7 +3,7 @@ import sys
 import os.path
 
 
-def configuration(cluster='default'):
+def configuration(cluster):
     config = ConfigParser.ConfigParser()
 
     if not config.read(['/etc/daikon/daikon.conf',

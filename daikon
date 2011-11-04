@@ -5,76 +5,88 @@ from modules import es, config
 
 VERSION = '0.02'
 
-config.configuration()
 
-parser_main = argparse.ArgumentParser(description='ElasticSearch CLI')
-parser_main.add_argument('--version', action='version',
-        version=VERSION)
+def main():
+    parser_main = argparse.ArgumentParser(description='ElasticSearch CLI v'
+            + VERSION)
 
-subparsers_main = parser_main.add_subparsers(title='subcommands',
-        description='valid subcommands', help='additional help')
+    parser_main.add_argument('--version', action='version',
+            version=VERSION)
 
-# index
+    parser_main.add_argument('--cluster', default='default')
 
-subparser_index = subparsers_main.add_parser('index')
-subparser_index = subparser_index.add_subparsers(title='subcommands',
-        description='valid subcommands', help='additional help')
+    subparsers_main = parser_main.add_subparsers(title='subcommands',
+            description='valid subcommands', help='additional help')
 
-# index create
+    # index
 
-subparser_index_create = subparser_index.add_parser('create')
-subparser_index_create.add_argument('--cluster')
+    subparser_index = subparsers_main.add_parser('index')
+    subparser_index = subparser_index.add_subparsers(title='subcommands',
+            description='valid subcommands', help='additional help')
 
-# index delete
+    # index create
 
-subparser_index_delete = subparser_index.add_parser('delete')
-subparser_index_delete.add_argument('--cluster')
+    subparser_index_create = subparser_index.add_parser('create')
+    subparser_index_create.add_argument('indexname')
+    subparser_index_create.add_argument('--cluster', default='default')
 
-# index health
+    # index delete
 
-subparser_index_health = subparser_index.add_parser('health')
-subparser_index_health.add_argument('--cluster')
+    subparser_index_delete = subparser_index.add_parser('delete')
+    subparser_index_delete.add_argument('indexname')
+    subparser_index_delete.add_argument('--cluster', default='default')
 
-# cluster
+    # index health
 
-subparser_cluster = subparsers_main.add_parser('cluster')
-subparser_cluster = subparser_cluster.add_subparsers(title='subcommands',
-        description='valid subcommands', help='additional help')
+    subparser_index_health = subparser_index.add_parser('health')
+    subparser_index_health.add_argument('indexname')
+    subparser_index_health.add_argument('--cluster', default='default')
 
-# cluster health
+    # cluster
 
-subparser_cluster_health = subparser_cluster.add_parser('health')
-subparser_cluster_health.add_argument('--cluster')
+    subparser_cluster = subparsers_main.add_parser('cluster')
+    subparser_cluster = subparser_cluster.add_subparsers(title='subcommands',
+            description='valid subcommands', help='additional help')
 
-# cluster state
+    # cluster health
 
-subparser_cluster_state = subparser_cluster.add_parser('state')
-subparser_cluster_state.add_argument('--cluster')
+    subparser_cluster_health = subparser_cluster.add_parser('health')
+    subparser_cluster_health.add_argument('--cluster', default='default')
 
-# cluster shutdown
+    # cluster state
 
-subparser_cluster_shutdown = subparser_cluster.add_parser('shutdown')
-subparser_cluster_shutdown.add_argument('--cluster')
+    subparser_cluster_state = subparser_cluster.add_parser('state')
+    subparser_cluster_state.add_argument('--cluster', default='default')
 
-# nodes
+    # cluster shutdown
 
-subparser_nodes = subparsers_main.add_parser('nodes')
-subparser_nodes = subparser_nodes.add_subparsers(title='subcommands',
-        description='valid subcommands', help='additional help')
+    subparser_cluster_shutdown = subparser_cluster.add_parser('shutdown')
+    subparser_cluster_shutdown.add_argument('--cluster', default='default')
 
-# nodes stats
+    # nodes
 
-subparser_nodes_stats = subparser_nodes.add_parser('stats')
-subparser_nodes_stats.add_argument('hostname')
-subparser_nodes_stats.add_argument('--cluster')
+    subparser_nodes = subparsers_main.add_parser('nodes')
+    subparser_nodes = subparser_nodes.add_subparsers(title='subcommands',
+            description='valid subcommands', help='additional help')
 
-# nodes shutdown
+    # nodes stats
 
-subparser_nodes_shutdown = subparser_nodes.add_parser('shutdown')
-subparser_nodes_shutdown.add_argument('hostname')
-subparser_nodes_shutdown.add_argument('--delay')
-subparser_nodes_shutdown.add_argument('--cluster')
+    subparser_nodes_stats = subparser_nodes.add_parser('stats')
+    subparser_nodes_stats.add_argument('hostname')
+    subparser_nodes_stats.add_argument('--cluster', default='default')
 
-# end
+    # nodes shutdown
 
-args = parser_main.parse_args()
+    subparser_nodes_shutdown = subparser_nodes.add_parser('shutdown')
+    subparser_nodes_shutdown.add_argument('hostname')
+    subparser_nodes_shutdown.add_argument('--delay')
+    subparser_nodes_shutdown.add_argument('--cluster', default='default')
+
+    # end
+
+    args = parser_main.parse_args()
+    config.configuration(args.cluster)
+
+if __name__ == "__main__":
+    main()
+
