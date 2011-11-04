@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import argparse
-from modules import es, config
+from modules import es_index, config
 
 VERSION = '0.02'
 
@@ -91,4 +91,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
