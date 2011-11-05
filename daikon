@@ -3,7 +3,7 @@
 import argparse
 from modules import es_index, es_config
 
-VERSION = '0.02'
+VERSION = '0.03'
 
 
 def main():
@@ -91,12 +91,6 @@ def main():
     es_args = parser_main.parse_args()
     es_config.configuration(es_args.cluster)
 
-    #print
-    #print es_args
-    #print
-    #print es_config.config
-    #print
-
     if es_args.shards is None:
         es_args.shards = es_config.config["shards"]
 
@@ -107,7 +101,7 @@ def main():
         es_index.index_create(es_config.config["host"],
                 es_config.config["port"],
                 es_args.subarser_index_create_indexname,
-                es_config.config["shards"], es_config.config["replicas"])
+                es_args.shards, es_args.replicas)
 
 if __name__ == "__main__":
     main()
