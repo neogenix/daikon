@@ -4,9 +4,8 @@ import sys
 
 
 def index_create(host, port, indexname, shards, replicas):
-
-    data_out = json.dumps([{"index" : { "number_of_shards" : shards,
-        "number_of_replicas" : replicas } }], sort_keys=True, indent=4)
+    data_out = json.dumps({"settings" : { "number_of_shards" : shards,
+        "number_of_replicas" : replicas } }, sort_keys=True, indent=4)
 
     request = requests.post('http://' + host + ':' + port + '/' + indexname,
             data=data_out)
