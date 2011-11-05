@@ -92,10 +92,6 @@ def main():
     args = parser_main.parse_args()
     config.configuration(args.cluster)
 
-    if args.cluster is None:
-        args.cluster = configuration.cluster
-        print args.cluster
-
     if args.shards is None:
         args.shards = configuration.shards
         print args.shards
