@@ -93,11 +93,11 @@ def main():
     es_config.configuration(args.cluster)
 
     if args.shards is None:
-        args.shards = config.shards
+        args.shards = config["shards"]
         print args.shards
 
     if args.replicas is None:
-        args.replicas = config.replicas
+        args.replicas = config["replicas"]
         print args.replicas
 
 if __name__ == "__main__":
