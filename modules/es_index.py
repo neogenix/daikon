@@ -14,7 +14,6 @@ def index_create(host, port, indexname, shards, replicas):
     data_in = json.loads(request.content)
 
     if not request.status_code == requests.codes.ok:
-        print
         print 'ERROR - Error Creating Index'
         print
         print ' Status Code:', request.status_code
@@ -24,6 +23,7 @@ def index_create(host, port, indexname, shards, replicas):
         print ' Replicas:', replicas
         print ' Shards:', shards
         print
+        sys.exit(1)
     else:
         print
         print 'SUCCESS - Index "' + indexname + '" Created Successfully'
@@ -32,5 +32,6 @@ def index_create(host, port, indexname, shards, replicas):
         print ' Replicas:', replicas
         print ' Shards:', shards
         print
+        sys.exit(0)
 
 #def index_delete(host, indexname):
