@@ -27,18 +27,17 @@ def main():
     # index create
 
     subparser_index_create = subparser_index.add_parser('create')
-    subparser_index_create.add_argument('indexname')
+    subparser_index_create.add_argument('subarser_index_create_indexname',
+            metavar='indexname')
     subparser_index_create.add_argument('--cluster')
     subparser_index_create.add_argument('--shards')
     subparser_index_create.add_argument('--replicas')
 
-    #subparser_index_create.add_argument('indexname', destination=index_create(args.cluster, args.cluster, args.shards, args.replicas)
-    #def index_create(host, indexname, shards, replicas):
-
     # index delete
 
     subparser_index_delete = subparser_index.add_parser('delete')
-    subparser_index_delete.add_argument('indexname')
+    subparser_index_delete.add_argument('subparser_index_delete_indexname',
+            metavar='indexname')
     subparser_index_delete.add_argument('--cluster')
 
     # index health
@@ -89,14 +88,26 @@ def main():
 
     # end
 
-    args = parser_main.parse_args()
-    es_config.configuration(args.cluster)
+    es_args = parser_main.parse_args()
+    es_config.configuration(es_args.cluster)
 
-    if args.shards is None:
-        args.shards = es_config.config["shards"]
+    #print
+    #print es_args
+    #print
+    #print es_config.config
+    #print
 
-    if args.replicas is None:
-        args.replicas = es_config.config["replicas"]
+    if es_args.shards is None:
+        es_args.shards = es_config.config["shards"]
+
+    if es_args.replicas is None:
+        es_args.replicas = es_config.config["replicas"]
+
+    if es_args.subarser_index_create_indexname:
+        es_index.index_create(es_config.config["host"],
+                es_config.config["port"],
+                es_args.subarser_index_create_indexname,
+                es_config.config["shards"], es_config.config["replicas"])
 
 if __name__ == "__main__":
     main()

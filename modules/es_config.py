@@ -4,12 +4,15 @@ import os.path
 
 config = {}
 
+
 def configuration(cluster):
     global config
     cparser = ConfigParser.ConfigParser()
 
     if cluster is None:
         config["cluster"] = 'default'
+    else:
+        config["cluster"] = cluster
 
     if not cparser.read(['/etc/daikon/daikon.conf',
                 os.path.expanduser('~/.daikon.conf'), 'daikon.conf']):
