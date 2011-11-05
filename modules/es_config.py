@@ -2,38 +2,40 @@ import ConfigParser
 import sys
 import os.path
 
+config = {}
 
 def configuration(cluster):
-    config = ConfigParser.ConfigParser()
+    global config
+    cparser = ConfigParser.ConfigParser()
 
     if cluster is None:
-        cluster = 'default'
+        config["cluster"] = 'default'
 
-    if not config.read(['/etc/daikon/daikon.conf',
+    if not cparser.read(['/etc/daikon/daikon.conf',
                 os.path.expanduser('~/.daikon.conf'), 'daikon.conf']):
-        sys.stderr.write("No config file found!\n")
+        sys.stderr.write("No cparser file found!\n")
         sys.exit(1)
 
-    if not config.has_section(cluster):
+    if not cparser.has_section(config.cluster):
         sys.stderr.write("No cluster section defined for this cluster!\n")
         sys.exit(1)
 
-    host = config.get(cluster, 'host')
-    if not host:
+    config["host"] = cparser.get(cluster, 'host')
+    if not config.host:
         sys.stderr.write("No default host defined!\n")
         sys.exit(1)
 
-    port = config.get(cluster, 'port')
-    if not port:
+    config["port"] = cparser.get(cluster, 'port')
+    if not config.port:
         sys.stderr.write("No default port defined!\n")
         sys.exit(1)
 
-    replicas = config.get(cluster, 'replicas')
-    if not replicas:
+    config["replicas"] = cparser.get(cluster, 'replicas')
+    if not config.replicas:
         sys.stderr.write("No default replicas defined!\n")
         sys.exit(1)
 
-    shards = config.get(cluster, 'shards')
-    if not shards:
+    config["shards"] = cparser.get(cluster, 'shards')
+    if not config.shards:
         sys.stderr.write("No default shards defined!\n")
         sys.exit(1)
