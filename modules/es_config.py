@@ -20,22 +20,22 @@ def configuration(cluster):
         sys.stderr.write("No cluster section defined for this cluster!\n")
         sys.exit(1)
 
-    config["host"] = cparser.get(cluster, 'host')
+    config["host"] = cparser.get(config["cluster"], 'host')
     if not config["host"]:
         sys.stderr.write("No default host defined!\n")
         sys.exit(1)
 
-    config["port"] = cparser.get(cluster, 'port')
+    config["port"] = cparser.get(config["cluster"], 'port')
     if not config["port"]:
         sys.stderr.write("No default port defined!\n")
         sys.exit(1)
 
-    config["replicas"] = cparser.get(cluster, 'replicas')
+    config["replicas"] = cparser.get(config["cluster"], 'replicas')
     if not config["replicas"]:
         sys.stderr.write("No default replicas defined!\n")
         sys.exit(1)
 
-    config["shards"] = cparser.get(cluster, 'shards')
+    config["shards"] = cparser.get(config["cluster"], 'shards')
     if not config["shards"]:
         sys.stderr.write("No default shards defined!\n")
         sys.exit(1)
