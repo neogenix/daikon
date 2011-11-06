@@ -34,6 +34,12 @@ Current Functions:
                 daikon index close <indexname>
                 daikon index close --cluster <clustername> <indexname>
 
+        * Status Indexes
+            examples:
+                daikon index status <indexname>
+                daikon index status --cluster <clustername> <indexname>
+                daikon index status --extended <indexname>
+
     * Working with Clusters
 
         * Health View

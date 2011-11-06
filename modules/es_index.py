@@ -119,10 +119,10 @@ def index_status(host, port, indexname, extended):
             print '\t\t Total Size:', data_result[u'indices'][indexname][u'index'][u'size']
 
         print '\t Document Status:'
-        print '\t\t Number Of Documents:', data_result[u'indices'][indexname][u'docs'][u'num_docs']
+        print '\t\t Number Of Docs (Current):', data_result[u'indices'][indexname][u'docs'][u'num_docs']
         if extended:
-            print '\t\t Maximum Documents:', data_result[u'indices'][indexname][u'docs'][u'max_doc']
-            print '\t\t Deleted Documents:', data_result[u'indices'][indexname][u'docs'][u'deleted_docs']
+            print '\t\t Number Of Docs (Max):', data_result[u'indices'][indexname][u'docs'][u'max_doc']
+            print '\t\t Number Of Docs (Deleted):', data_result[u'indices'][indexname][u'docs'][u'deleted_docs']
 
         print '\t Merge Status:'
         print '\t\t Total Merges:', data_result[u'indices'][indexname][u'merges'][u'total']
