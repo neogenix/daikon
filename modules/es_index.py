@@ -61,3 +61,37 @@ def index_list(host, port, extended):
                 print '\t Number Of Shards:', data_result[index][u'number_of_shards']
                 print '\t Number Of Replicas:', data_result[index][u'number_of_replicas']
         sys.exit(0)
+
+
+def index_open(host, port, indexname):
+    try:
+        request = requests.post('http://' + host + ':' + port + '/' +
+                indexname + '/_open')
+        if request.error is not None:
+            print 'ERROR: Opening Index : "' + indexname + '" -', request.error
+            sys.exit(1)
+        else:
+            request.raise_for_status()
+    except requests.RequestException, e:
+        print 'ERROR: Opening Index : "' + indexname + '" -',  e
+        sys.exit(1)
+    else:
+        print 'SUCCESS: Opening Index : "' + indexname + '"'
+        sys.exit(0)
+
+
+def index_close(host, port, indexname):
+    try:
+        request = requests.post('http://' + host + ':' + port + '/' +
+                indexname + '/_close')
+        if request.error is not None:
+            print 'ERROR: Closing Index : "' + indexname + '" -', request.error
+            sys.exit(1)
+        else:
+            request.raise_for_status()
+    except requests.RequestException, e:
+        print 'ERROR: Closing Index : "' + indexname + '" -',  e
+        sys.exit(1)
+    else:
+        print 'SUCCESS: Closing Index : "' + indexname + '"'
+        sys.exit(0)

@@ -41,6 +41,20 @@ def main():
             metavar='indexname')
     subparser_index_delete.add_argument('--cluster')
 
+    # index open
+
+    subparser_index_open = subparser_index.add_parser('open')
+    subparser_index_open.add_argument('subparser_index_open_indexname',
+            metavar='indexname')
+    subparser_index_open.add_argument('--cluster')
+
+    # index close
+
+    subparser_index_close = subparser_index.add_parser('close')
+    subparser_index_close.add_argument('subparser_index_close_indexname',
+            metavar='indexname')
+    subparser_index_close.add_argument('--cluster')
+
     # index health
 
     subparser_index_health = subparser_index.add_parser('health')
@@ -113,6 +127,14 @@ def main():
             es_index.index_delete(es_config.config["host"],
                     es_config.config["port"],
                     es_args.subparser_index_delete_indexname)
+        if es_args.subparser_index_name == 'open':
+            es_index.index_open(es_config.config["host"],
+                    es_config.config["port"],
+                    es_args.subparser_index_open_indexname)
+        if es_args.subparser_index_name == 'close':
+            es_index.index_close(es_config.config["host"],
+                    es_config.config["port"],
+                    es_args.subparser_index_close_indexname)
 
 
 if __name__ == "__main__":
