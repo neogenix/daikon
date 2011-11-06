@@ -11,16 +11,12 @@ def index_create(host, port, indexname, shards, replicas):
         request = requests.post('http://' + host + ':' + port + '/' +
                 indexname, data=data_out)
         if request.error is not None:
-            #if json.loads(request.content)[u'error']:
-            #    print 'ERROR: Creating Index : "' + indexname + '" - ', request.error, " - ", json.loads(request.content)[u'error']
-            #else:
-            #    print 'ERROR: Creating Index : "' + indexname + '" - ', request.error
-            print 'ERROR: Creating Index : "' + indexname + '" - ', request.error
+            print 'ERROR: Creating Index : "' + indexname + '" -', request.error
             sys.exit(1)
         else:
             request.raise_for_status()
     except requests.RequestException, e:
-        print 'ERROR: Creating Index : "' + indexname + '" - ',  e
+        print 'ERROR: Creating Index : "' + indexname + '" -',  e
         sys.exit(1)
     else:
         print 'SUCCESS: Creating Index : "' + indexname + '"'
@@ -29,15 +25,32 @@ def index_create(host, port, indexname, shards, replicas):
 
 def index_delete(host, port, indexname):
     try:
-        request = requests.delete('http://' + host + ":" + port + '/' + indexname)
+        request = requests.delete('http://' + host + ':' + port + '/' + indexname)
         if request.error is not None:
-            print 'ERROR: Deleteing Index : "' + indexname + '" - ', request.error
+            print 'ERROR: Deleteing Index : "' + indexname + '" -', request.error
             sys.exit(1)
         else:
             request.raise_for_status()
     except requests.RequestException, e:
-        print 'ERROR: Deleting Index : "' + indexname + '" - ',  e
+        print 'ERROR: Deleting Index : "' + indexname + '" -',  e
         sys.exit(1)
     else:
         print 'SUCCESS: Deleting Index : "' + indexname + '"'
+        sys.exit(0)
+
+
+def index_list(host, port):
+    try:
+        request = requests.get('http://' + host + ':' + port +
+                '/_cluster/health?level=indices')
+        if request.error is not None:
+            print 'ERROR: Listing Indexes :', request.error
+            sys.exit(1)
+        else:
+            request.raise_for_status()
+    except requests.RequestException, e:
+        print 'ERROR:  Listing Indexes -', e
+        sys.exit(1)
+    else:
+        print request.content
         sys.exit(0)
