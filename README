@@ -1,7 +1,7 @@
 Daikon is a CLI for ElasticSearch to make some of the basic admin tasks associated
 with ElasticSearch a little easier than using curl... you know for us lazy folks.
 
-It's written in Python, and requires python 2.7.x.
+It's written in Python, and requires python 2.7.x, and Python-Requests.
 
 Current Functions:
 
@@ -17,6 +17,12 @@ Current Functions:
             examples:
                 daikon index delete <indexname>
                 daikon index delete --cluster <clustername> <indexname>
+
+        * List Indexes
+            examples:
+                daikon index list
+                daikon index list --cluster <clustername>
+                daikon index list --extended
 
     * Working with Clusters
 
