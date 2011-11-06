@@ -100,21 +100,19 @@ def main():
     es_args = parser_main.parse_args()
     es_config.configuration(es_args)
 
-    if hasattr(es_args, "subarser_index_create_indexname"):
-        es_index.index_create(es_config.config["host"],
-                es_config.config["port"],
-                es_args.subarser_index_create_indexname,
-                es_config.config["shards"], es_config.config["replicas"])
-
-    if hasattr(es_args, "subparser_index_delete_indexname"):
-        es_index.index_delete(es_config.config["host"],
-                es_config.config["port"],
-                es_args.subparser_index_delete_indexname)
-
     if es_args.subparser_index_name:
         if es_args.subparser_index_name == 'list':
             es_index.index_list(es_config.config["host"],
                     es_config.config["port"], es_args.extended)
+        if es_args.subparser_index_name == 'create':
+            es_index.index_create(es_config.config["host"],
+                    es_config.config["port"],
+                    es_args.subarser_index_create_indexname,
+                    es_config.config["shards"], es_config.config["replicas"])
+        if es_args.subparser_index_name == 'delete':
+            es_index.index_delete(es_config.config["host"],
+                    es_config.config["port"],
+                    es_args.subparser_index_delete_indexname)
 
 
 if __name__ == "__main__":
