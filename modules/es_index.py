@@ -20,7 +20,6 @@ def index_create(host, port, indexname, shards, replicas):
         sys.exit(1)
     else:
         print 'SUCCESS: Creating Index : "' + indexname + '"'
-        sys.exit(0)
 
 
 def index_delete(host, port, indexname):
@@ -36,7 +35,6 @@ def index_delete(host, port, indexname):
         sys.exit(1)
     else:
         print 'SUCCESS: Deleting Index : "' + indexname + '"'
-        sys.exit(0)
 
 
 def index_list(host, port, extended):
@@ -60,7 +58,6 @@ def index_list(host, port, extended):
                 print '\t Status:', data_result[index][u'status']
                 print '\t Number Of Shards:', data_result[index][u'number_of_shards']
                 print '\t Number Of Replicas:', data_result[index][u'number_of_replicas']
-        sys.exit(0)
 
 
 def index_open(host, port, indexname):
@@ -77,7 +74,6 @@ def index_open(host, port, indexname):
         sys.exit(1)
     else:
         print 'SUCCESS: Opening Index : "' + indexname + '"'
-        sys.exit(0)
 
 
 def index_close(host, port, indexname):
@@ -94,7 +90,6 @@ def index_close(host, port, indexname):
         sys.exit(1)
     else:
         print 'SUCCESS: Closing Index : "' + indexname + '"'
-        sys.exit(0)
 
 
 def index_status(host, port, indexname, extended):
@@ -140,5 +135,3 @@ def index_status(host, port, indexname, extended):
                 print '\t\t\t Number Of Docs (Current):', data_shard[u'docs'][u'num_docs']
                 print '\t\t\t Number Of Docs (Max):', data_shard[u'docs'][u'max_doc']
                 print '\t\t\t Number Of Docs (Deleted):', data_shard[u'docs'][u'deleted_docs']
-
-        sys.exit(0)
