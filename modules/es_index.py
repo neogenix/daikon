@@ -4,12 +4,12 @@ import sys
 
 
 def index_create(host, port, indexname, shards, replicas):
-    data_out = json.dumps({"settings" : { "number_of_shards" : shards,
+    data_request = json.dumps({"settings" : { "number_of_shards" : shards,
         "number_of_replicas" : replicas } }, sort_keys=True, indent=4)
 
     try:
         request = requests.post('http://' + host + ':' + port + '/' +
-                indexname, data=data_out)
+                indexname, data=data_request)
         if request.error is not None:
             print 'ERROR: Creating Index : "' + indexname + '" -', request.error
             sys.exit(1)
@@ -39,7 +39,7 @@ def index_delete(host, port, indexname):
         sys.exit(0)
 
 
-def index_list(host, port):
+def index_list(host, port, extended):
     try:
         request = requests.get('http://' + host + ':' + port +
                 '/_cluster/health?level=indices')
@@ -52,6 +52,12 @@ def index_list(host, port):
         print 'ERROR:  Listing Indexes -', e
         sys.exit(1)
     else:
-        for index in json.loads(request.content)[u'indices']:
-            print "Name: " + index
+        data_result = json.loads(request.content)[u'indices']
+        print 'SUCCESS: Listing Indexes'
+        for index in data_result:
+            print 'Name:', index
+            if extended:
+                print '\t Status:', data_result[index][u'status']
+                print '\t Number Of Shards:', data_result[index][u'number_of_shards']
+                print '\t Number Of Replicas:', data_result[index][u'number_of_replicas']
         sys.exit(0)

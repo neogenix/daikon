@@ -51,6 +51,7 @@ def main():
 
     subparser_index_list = subparser_index.add_parser('list')
     subparser_index_list.add_argument('--cluster')
+    subparser_index_list.add_argument('--extended', action='store_true')
 
     # cluster
 
@@ -113,7 +114,7 @@ def main():
     if es_args.subparser_index_name:
         if es_args.subparser_index_name == 'list':
             es_index.index_list(es_config.config["host"],
-                    es_config.config["port"])
+                    es_config.config["port"], es_args.extended)
 
 
 if __name__ == "__main__":
