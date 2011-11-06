@@ -11,34 +11,34 @@ Current Functions:
             examples:
                 daikon index create <indexname>
                 daikon index create --replicas <replicas> --shards <shards> <indexname>
-                daikon index create --cluster <clustername> <indexname>
+                daikon index create --cluster <clustername> --host <host> --port <port> <indexname>
 
         * Delete Indexes
             examples:
                 daikon index delete <indexname>
-                daikon index delete --cluster <clustername> <indexname>
+                daikon index delete --cluster <clustername> --host <host> --port <port> <indexname>
 
         * List Indexes
             examples:
                 daikon index list <indexname>
-                daikon index list --cluster <clustername> <indexname>
                 daikon index list --extended <indexname>
+                daikon index list --cluster <clustername> --host <host> --port <port> <indexname>
 
         * Open Indexes
             examples:
                 daikon index open <indexname>
-                daikon index open --cluster <clustername> <indexname>
+                daikon index open --cluster <clustername> --host <host> --port <port> <indexname>
 
         * Close Indexes
             examples:
                 daikon index close <indexname>
-                daikon index close --cluster <clustername> <indexname>
+                daikon index close --cluster <clustername> --host <host> --port <port> <indexname>
 
         * Status Indexes
             examples:
                 daikon index status <indexname>
-                daikon index status --cluster <clustername> <indexname>
                 daikon index status --extended <indexname>
+                daikon index status --cluster <clustername> --host <host> --port <port> <indexname>
 
     * Working with Clusters
 
