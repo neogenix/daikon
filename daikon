@@ -55,11 +55,13 @@ def main():
             metavar='indexname')
     subparser_index_close.add_argument('--cluster')
 
-    # index health
+    # index status
 
-    subparser_index_health = subparser_index.add_parser('health')
-    subparser_index_health.add_argument('indexname')
-    subparser_index_health.add_argument('--cluster')
+    subparser_index_status = subparser_index.add_parser('status')
+    subparser_index_status.add_argument('subparser_index_status_indexname',
+            metavar='indexname')
+    subparser_index_status.add_argument('--cluster')
+    subparser_index_status.add_argument('--extended', action='store_true')
 
     # index list
 
@@ -135,6 +137,10 @@ def main():
             es_index.index_close(es_config.config["host"],
                     es_config.config["port"],
                     es_args.subparser_index_close_indexname)
+        if es_args.subparser_index_name == 'status':
+            es_index.index_status(es_config.config["host"],
+                    es_config.config["port"],
+                    es_args.subparser_index_status_indexname, es_args.extended)
 
 
 if __name__ == "__main__":

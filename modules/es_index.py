@@ -95,3 +95,50 @@ def index_close(host, port, indexname):
     else:
         print 'SUCCESS: Closing Index : "' + indexname + '"'
         sys.exit(0)
+
+
+def index_status(host, port, indexname, extended):
+    try:
+        request = requests.get('http://' + host + ':' + port + '/' +
+                indexname + '/_status')
+        if request.error is not None:
+            print 'ERROR: Fetching Index Status : "' + indexname + '" -', request.error
+            sys.exit(1)
+        else:
+            request.raise_for_status()
+    except requests.RequestException, e:
+        print 'ERROR: Fetching Index Status : "' + indexname + '" -',  e
+        sys.exit(1)
+    else:
+        print 'SUCCESS: Fetching Index Status : "' + indexname + '"\n'
+        data_result = json.loads(request.content)
+
+        print '\t Size Status:'
+        print '\t\t Primary Size:', data_result[u'indices'][indexname][u'index'][u'primary_size']
+        if extended:
+            print '\t\t Total Size:', data_result[u'indices'][indexname][u'index'][u'size']
+
+        print '\t Document Status:'
+        print '\t\t Number Of Documents:', data_result[u'indices'][indexname][u'docs'][u'num_docs']
+        if extended:
+            print '\t\t Maximum Documents:', data_result[u'indices'][indexname][u'docs'][u'max_doc']
+            print '\t\t Deleted Documents:', data_result[u'indices'][indexname][u'docs'][u'deleted_docs']
+
+        print '\t Merge Status:'
+        print '\t\t Total Merges:', data_result[u'indices'][indexname][u'merges'][u'total']
+        if extended:
+            print '\t\t Current Merges:', data_result[u'indices'][indexname][u'merges'][u'current']
+
+        if extended:
+            print '\n\t Shard Status:'
+            for shard in data_result[u'indices'][indexname][u'shards']:
+                print '\n\t\t Number:', shard
+
+                data_shard = data_result[u'indices'][indexname][u'shards'][shard][0]
+                print '\t\t\t State:', data_shard[u'routing'][u'state']
+                print '\t\t\t Size:', data_shard[u'index'][u'size']
+                print '\t\t\t Number Of Docs (Current):', data_shard[u'docs'][u'num_docs']
+                print '\t\t\t Number Of Docs (Max):', data_shard[u'docs'][u'max_doc']
+                print '\t\t\t Number Of Docs (Deleted):', data_shard[u'docs'][u'deleted_docs']
+
+        sys.exit(0)
