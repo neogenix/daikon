@@ -14,6 +14,8 @@ def main():
             version=VERSION)
 
     parser_main.add_argument('--cluster')
+    parser_main.add_argument('--host')
+    parser_main.add_argument('--port')
 
     subparsers_main = parser_main.add_subparsers(title='subcommands',
             description='valid subcommands', help='additional help')
@@ -33,6 +35,8 @@ def main():
     subparser_index_create.add_argument('--cluster')
     subparser_index_create.add_argument('--shards')
     subparser_index_create.add_argument('--replicas')
+    subparser_index_create.add_argument('--host')
+    subparser_index_create.add_argument('--port')
 
     # index delete
 
@@ -40,6 +44,8 @@ def main():
     subparser_index_delete.add_argument('subparser_index_delete_indexname',
             metavar='indexname')
     subparser_index_delete.add_argument('--cluster')
+    subparser_index_delete.add_argument('--host')
+    subparser_index_delete.add_argument('--port')
 
     # index open
 
@@ -47,6 +53,8 @@ def main():
     subparser_index_open.add_argument('subparser_index_open_indexname',
             metavar='indexname')
     subparser_index_open.add_argument('--cluster')
+    subparser_index_open.add_argument('--host')
+    subparser_index_open.add_argument('--port')
 
     # index close
 
@@ -54,6 +62,8 @@ def main():
     subparser_index_close.add_argument('subparser_index_close_indexname',
             metavar='indexname')
     subparser_index_close.add_argument('--cluster')
+    subparser_index_close.add_argument('--host')
+    subparser_index_close.add_argument('--port')
 
     # index status
 
@@ -61,12 +71,16 @@ def main():
     subparser_index_status.add_argument('subparser_index_status_indexname',
             metavar='indexname')
     subparser_index_status.add_argument('--cluster')
+    subparser_index_status.add_argument('--host')
+    subparser_index_status.add_argument('--port')
     subparser_index_status.add_argument('--extended', action='store_true')
 
     # index list
 
     subparser_index_list = subparser_index.add_parser('list')
     subparser_index_list.add_argument('--cluster')
+    subparser_index_list.add_argument('--host')
+    subparser_index_list.add_argument('--port')
     subparser_index_list.add_argument('--extended', action='store_true')
 
     # cluster
@@ -80,16 +94,22 @@ def main():
 
     subparser_cluster_health = subparser_cluster.add_parser('health')
     subparser_cluster_health.add_argument('--cluster')
+    subparser_cluster_health.add_argument('--host')
+    subparser_cluster_health.add_argument('--port')
 
     # cluster state
 
     subparser_cluster_state = subparser_cluster.add_parser('state')
     subparser_cluster_state.add_argument('--cluster')
+    subparser_cluster_state.add_argument('--host')
+    subparser_cluster_state.add_argument('--port')
 
     # cluster shutdown
 
     subparser_cluster_shutdown = subparser_cluster.add_parser('shutdown')
     subparser_cluster_shutdown.add_argument('--cluster')
+    subparser_cluster_shutdown.add_argument('--host')
+    subparser_cluster_shutdown.add_argument('--port')
 
     # nodes
 
@@ -103,12 +123,16 @@ def main():
     subparser_nodes_stats = subparser_nodes.add_parser('stats')
     subparser_nodes_stats.add_argument('hostname')
     subparser_nodes_stats.add_argument('--cluster')
+    subparser_nodes_stats.add_argument('--host')
+    subparser_nodes_stats.add_argument('--port')
 
     # nodes shutdown
 
     subparser_nodes_shutdown = subparser_nodes.add_parser('shutdown')
     subparser_nodes_shutdown.add_argument('hostname')
     subparser_nodes_shutdown.add_argument('--delay')
+    subparser_nodes_shutdown.add_argument('--host')
+    subparser_nodes_shutdown.add_argument('--port')
     subparser_nodes_shutdown.add_argument('--cluster')
 
     # end
