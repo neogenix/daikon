@@ -28,7 +28,7 @@ def main():
 
     subparser_index_create = subparser_index.add_parser('create')
     subparser_index_create.add_argument('subarser_index_create_indexname',
-            metavar='indexname')
+            metavar='indexname', required=True)
     subparser_index_create.add_argument('--cluster')
     subparser_index_create.add_argument('--shards')
     subparser_index_create.add_argument('--replicas')
@@ -37,14 +37,19 @@ def main():
 
     subparser_index_delete = subparser_index.add_parser('delete')
     subparser_index_delete.add_argument('subparser_index_delete_indexname',
-            metavar='indexname')
+            metavar='indexname', required=True)
     subparser_index_delete.add_argument('--cluster')
 
     # index health
 
     subparser_index_health = subparser_index.add_parser('health')
-    subparser_index_health.add_argument('indexname')
+    subparser_index_health.add_argument('indexname', required=True)
     subparser_index_health.add_argument('--cluster')
+
+    # index list
+
+    subparser_index_list = subparser_index.add_parser('list')
+    subparser_index_list.add_argument('--cluster')
 
     # cluster
 
@@ -89,6 +94,9 @@ def main():
     # end
 
     es_args = parser_main.parse_args()
+
+    print es_args
+
     es_config.configuration(es_args)
 
     if hasattr(es_args, "subarser_index_create_indexname"):
