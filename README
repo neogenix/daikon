@@ -20,9 +20,19 @@ Current Functions:
 
         * List Indexes
             examples:
-                daikon index list
-                daikon index list --cluster <clustername>
-                daikon index list --extended
+                daikon index list <indexname>
+                daikon index list --cluster <clustername> <indexname>
+                daikon index list --extended <indexname>
+
+        * Open Indexes
+            examples:
+                daikon index open <indexname>
+                daikon index open --cluster <clustername> <indexname>
+
+        * Close Indexes
+            examples:
+                daikon index close <indexname>
+                daikon index close --cluster <clustername> <indexname>
 
     * Working with Clusters
 
