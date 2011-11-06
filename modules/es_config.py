@@ -5,14 +5,14 @@ import os.path
 config = {}
 
 
-def configuration(cluster):
+def configuration(arguments):
     global config
     cparser = ConfigParser.ConfigParser()
 
-    if cluster is None:
-        config["cluster"] = 'default'
+    if hasattr(arguments, "cluster") and arguments.cluster is not None:
+        config["cluster"] = arguments.cluster
     else:
-        config["cluster"] = cluster
+        config["cluster"] = 'default'
 
     if not cparser.read(['/etc/daikon/daikon.conf',
                 os.path.expanduser('~/.daikon.conf'), 'daikon.conf']):
@@ -23,22 +23,42 @@ def configuration(cluster):
         sys.stderr.write("No cluster section defined for this cluster!\n")
         sys.exit(1)
 
-    config["host"] = cparser.get(config["cluster"], 'host')
-    if not config["host"]:
+    # Host Config Setup
+
+    if not cparser.get(config["cluster"], 'host'):
         sys.stderr.write("No default host defined!\n")
         sys.exit(1)
+    elif hasattr(arguments, 'host') and arguments.host:
+        config["host"] = arguments.host
+    else:
+        config["host"] = cparser.get(config["cluster"], 'host')
 
-    config["port"] = cparser.get(config["cluster"], 'port')
-    if not config["port"]:
+    # Port Config Setup
+
+    if not cparser.get(config["cluster"], 'port'):
         sys.stderr.write("No default port defined!\n")
         sys.exit(1)
+    elif hasattr(arguments, 'port') and arguments.port:
+        config["port"] = arguments.port
+    else:
+        config["port"] = cparser.get(config["cluster"], 'port')
 
-    config["replicas"] = cparser.get(config["cluster"], 'replicas')
-    if not config["replicas"]:
+    # Replicas Config Setup
+
+    if not cparser.get(config["cluster"], 'replicas'):
         sys.stderr.write("No default replicas defined!\n")
         sys.exit(1)
+    elif hasattr(arguments, 'replicas') and arguments.replicas:
+        config["replicas"] = arguments.replicas
+    else:
+        config["replicas"] = cparser.get(config["cluster"], 'replicas')
 
-    config["shards"] = cparser.get(config["cluster"], 'shards')
-    if not config["shards"]:
+    # Replicas Config Setup
+
+    if not cparser.get(config["cluster"], 'shards'):
         sys.stderr.write("No default shards defined!\n")
         sys.exit(1)
+    elif hasattr(arguments, 'shards') and arguments.shards:
+        config["shards"] = arguments.shards
+    else:
+        config["shards"] = cparser.get(config["cluster"], 'shards')
