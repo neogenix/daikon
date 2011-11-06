@@ -22,13 +22,14 @@ def main():
 
     subparser_index = subparsers_main.add_parser('index')
     subparser_index = subparser_index.add_subparsers(title='subcommands',
-            description='valid subcommands', help='additional help')
+            description='valid subcommands', help='additional help',
+            dest='subparser_index_name')
 
     # index create
 
     subparser_index_create = subparser_index.add_parser('create')
     subparser_index_create.add_argument('subarser_index_create_indexname',
-            metavar='indexname', required=True)
+            metavar='indexname')
     subparser_index_create.add_argument('--cluster')
     subparser_index_create.add_argument('--shards')
     subparser_index_create.add_argument('--replicas')
@@ -37,13 +38,13 @@ def main():
 
     subparser_index_delete = subparser_index.add_parser('delete')
     subparser_index_delete.add_argument('subparser_index_delete_indexname',
-            metavar='indexname', required=True)
+            metavar='indexname')
     subparser_index_delete.add_argument('--cluster')
 
     # index health
 
     subparser_index_health = subparser_index.add_parser('health')
-    subparser_index_health.add_argument('indexname', required=True)
+    subparser_index_health.add_argument('indexname')
     subparser_index_health.add_argument('--cluster')
 
     # index list
@@ -55,7 +56,8 @@ def main():
 
     subparser_cluster = subparsers_main.add_parser('cluster')
     subparser_cluster = subparser_cluster.add_subparsers(title='subcommands',
-            description='valid subcommands', help='additional help')
+            description='valid subcommands', help='additional help',
+            dest='subparser_cluster_name')
 
     # cluster health
 
@@ -76,7 +78,8 @@ def main():
 
     subparser_nodes = subparsers_main.add_parser('nodes')
     subparser_nodes = subparser_nodes.add_subparsers(title='subcommands',
-            description='valid subcommands', help='additional help')
+            description='valid subcommands', help='additional help',
+            dest='subparser_nodes_name')
 
     # nodes stats
 
@@ -94,9 +97,6 @@ def main():
     # end
 
     es_args = parser_main.parse_args()
-
-    print es_args
-
     es_config.configuration(es_args)
 
     if hasattr(es_args, "subarser_index_create_indexname"):
@@ -109,6 +109,11 @@ def main():
         es_index.index_delete(es_config.config["host"],
                 es_config.config["port"],
                 es_args.subparser_index_delete_indexname)
+
+    if es_args.subparser_index_name:
+        if es_args.subparser_index_name == 'list':
+            es_index.index_list(es_config.config["host"],
+                    es_config.config["port"])
 
 
 if __name__ == "__main__":

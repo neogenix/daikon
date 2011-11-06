@@ -52,5 +52,6 @@ def index_list(host, port):
         print 'ERROR:  Listing Indexes -', e
         sys.exit(1)
     else:
-        print request.content
+        for index in json.loads(request.content)[u'indices']:
+            print "Name: " + index
         sys.exit(0)
