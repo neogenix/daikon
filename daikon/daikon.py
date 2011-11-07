@@ -3,7 +3,7 @@
 import argparse
 from modules import es_index, es_cluster, es_config, es_node
 
-VERSION = '1.00'
+VERSION = '1.02'
 
 
 def main():

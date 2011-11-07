@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.00'
+VERSION = '1.02'
 
 setup(name='daikon',
         version=VERSION,
@@ -24,6 +24,9 @@ setup(name='daikon',
         install_requires=[
             'requests',
             'anyjson'
+        ],
+        data_files=[
+            ('/etc/daikon', ['daikon.conf'])
         ],
         entry_points={
             'console_scripts':
