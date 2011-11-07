@@ -20,8 +20,20 @@ And even this should too, but you shouldn't use it... : ::
 
     $ easy_install daikon
 
-Current Functionality:
-----------------------
+Configuration
+-------------
+
+Configuration is defined in /etc/daikon/daikon.conf, or ~/.daikon.conf, and has
+the format : ::
+
+[default]
+host = localhost
+port = 9200
+replicas = 3
+shards = 2
+
+Current Functionality
+---------------------
 
 Commands : ::
 
@@ -81,8 +93,8 @@ Commands : ::
                 daikon node shutdown --cluster <clustername> --port <port> <nodename>
 
 
-Planned Functionality:
-----------------------
+Planned Functionality
+---------------------
 
 Future Planned Functionality : ::
 
