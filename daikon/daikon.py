@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-from modules import es_index, es_cluster, es_config
+from modules import es_index, es_cluster, es_config, es_node
 
 VERSION = '0.13'
 
@@ -18,7 +18,8 @@ def main():
     parser_main.add_argument('--port')
 
     subparsers_main = parser_main.add_subparsers(title='subcommands',
-            description='valid subcommands', help='additional help')
+            description='valid subcommands', help='additional help',
+            dest='subparsers_main')
 
     # index
 
@@ -105,29 +106,29 @@ def main():
     subparser_cluster_shutdown.add_argument('--host')
     subparser_cluster_shutdown.add_argument('--port')
 
-    # nodes
+    # node
 
-    subparser_nodes = subparsers_main.add_parser('nodes')
-    subparser_nodes = subparser_nodes.add_subparsers(title='subcommands',
+    subparser_node = subparsers_main.add_parser('node')
+    subparser_node = subparser_node.add_subparsers(title='subcommands',
             description='valid subcommands', help='additional help',
-            dest='subparser_nodes_name')
+            dest='subparser_node_name')
 
-    # nodes stats
+    # node status
 
-    subparser_nodes_stats = subparser_nodes.add_parser('stats')
-    subparser_nodes_stats.add_argument('hostname')
-    subparser_nodes_stats.add_argument('--cluster')
-    subparser_nodes_stats.add_argument('--host')
-    subparser_nodes_stats.add_argument('--port')
+    subparser_node_status = subparser_node.add_parser('status')
+    subparser_node_status.add_argument('subparser_node_status_hostname',
+            metavar='hostname')
+    subparser_node_status.add_argument('--cluster')
+    subparser_node_status.add_argument('--port')
 
-    # nodes shutdown
+    # node shutdown
 
-    subparser_nodes_shutdown = subparser_nodes.add_parser('shutdown')
-    subparser_nodes_shutdown.add_argument('hostname')
-    subparser_nodes_shutdown.add_argument('--delay')
-    subparser_nodes_shutdown.add_argument('--host')
-    subparser_nodes_shutdown.add_argument('--port')
-    subparser_nodes_shutdown.add_argument('--cluster')
+    subparser_node_shutdown = subparser_node.add_parser('shutdown')
+    subparser_node_shutdown.add_argument('subparser_node_shutdown_hostname',
+            metavar='hostname')
+    subparser_node_shutdown.add_argument('--delay')
+    subparser_node_shutdown.add_argument('--port')
+    subparser_node_shutdown.add_argument('--cluster')
 
     # end
 
@@ -168,7 +169,9 @@ def main():
             es_cluster.cluster_shutdown(es_config.config['cluster'],
                     es_config.config['host'], es_config.config['port'])
     elif hasattr(es_args, 'subparser_node_name'):
-        print 'ping'
+        if es_args.subparser_node_name == 'shutdown':
+            es_node.node_shutdown(es_args.subparser_node_shutdown_hostname,
+                    es_config.config['port'])
 
 
 if __name__ == '__main__':
