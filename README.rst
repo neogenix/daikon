@@ -70,6 +70,7 @@ Commands : ::
         * Shutdown
             examples:
                 daikon node shutdown <nodename>
+                daikon node shutdown --delay <delayseconds> <nodename>
                 daikon node shutdown --cluster <clustername> --port <port> <nodename>
 
 
