@@ -42,8 +42,12 @@ Current Functions:
 
     * Working with Clusters
 
-        * Health View
+        * Status View
             examples:
+                daikon cluster status
+                daikon cluster status --extended
+                daikon cluster status --cluster <clustername> --host <host> --port <port>
+
 
         * State View
             examples:
