@@ -1,14 +1,25 @@
-# Daikon
+Daikon
+======
 
-## Description
+Description
+-----------
 
 Daikon is a CLI for ElasticSearch to make some of the basic admin tasks associated
 with ElasticSearch a little easier than using curl... you know for us lazy folks.
 
 It's written in Python, and requires python 2.7.x, anyjson, and Python-Requests.
 
-## Current Functionality:
+Installing
+----------
 
+::
+    pip install daikon
+    easy_install daikon
+
+Current Functionality:
+----------------------
+
+::
     * Working with Indexes
 
         * Create Indexes
@@ -64,7 +75,8 @@ It's written in Python, and requires python 2.7.x, anyjson, and Python-Requests.
             examples:
 
 
-## Planned Functionality:
+Planned Functionality:
+----------------------
 
     * Working with Rivers (and provide plugin supports for rivers)
     * Working with indexes to dump, and import
