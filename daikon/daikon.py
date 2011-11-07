@@ -171,6 +171,8 @@ def main():
             es_cluster.cluster_status(es_config.config['cluster'],
                     es_config.config['host'], es_config.config['port'],
                     es_args.extended)
+    elif hasattr(es_args, 'subparser_node_name'):
+        print 'ping'
 
 
 if __name__ == '__main__':

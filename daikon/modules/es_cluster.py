@@ -1,5 +1,5 @@
 import requests
-import anyjson
+import anyjson as json
 import sys
 
 

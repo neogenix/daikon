@@ -1,5 +1,5 @@
 import requests
-import anyjson
+import anyjson as json
 import sys
 
 
@@ -39,26 +39,42 @@ def index_delete(host, port, indexname):
 
 def index_list(host, port, extended):
     try:
-        request = requests.get('http://' + host + ':' + port +
+        request_health = requests.get('http://' + host + ':' + port +
                 '/_cluster/health?level=indices')
-        if request.error is not None:
-            print 'ERROR: Listing Indexes :', request.error
+        if request_health.error is not None:
+            print 'ERROR: Listing Indexes :', request_health.error
             sys.exit(1)
         else:
-            request.raise_for_status()
-    except requests.RequestException, e:
+            request_health.raise_for_status()
+
+        request_state = requests.get('http://' + host + ':' + port +
+                '/_cluster/state')
+        if request_state.error is not None:
+            print 'ERROR: Listing Indexes :', request_state.error
+            sys.exit(1)
+        else:
+            request_state.raise_for_status()
+
+    except request_health.RequestException, e:
+        print 'ERROR:  Listing Indexes -', e
+        sys.exit(1)
+    except request_state.RequestException, e:
         print 'ERROR:  Listing Indexes -', e
         sys.exit(1)
     else:
-        data_result = json.loads(request.content)[u'indices']
+        data_result_state = json.loads(request_state.content)[u'metadata'][u'indices']
+        data_result_health = json.loads(request_health.content)[u'indices']
         print 'SUCCESS: Listing Indexes'
-        for index in data_result:
+        for index in data_result_state:
             print '\t Name:', index
             if extended:
-                print '\t\t Status:', data_result[index][u'status']
-                print '\t\t Number Of Shards:', data_result[index][u'number_of_shards']
-                print '\t\t Number Of Replicas:', data_result[index][u'number_of_replicas']
-
+                print '\t\t State:', data_result_state[index][u'state']
+                if data_result_state[index][u'state'] == 'close':
+                    print '\t\t Status: CLOSED'
+                else:
+                    print '\t\t Status:', data_result_health[index][u'status']
+                print '\t\t Number Of Shards:', data_result_state[index][u'settings'][u'index.number_of_shards']
+                print '\t\t Number Of Replicas:', data_result_state[index][u'settings'][u'index.number_of_replicas'] 
 
 def index_open(host, port, indexname):
     try:
