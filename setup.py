@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.13'
+VERSION = '1.00'
 
 setup(name='daikon',
         version=VERSION,

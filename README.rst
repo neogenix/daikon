@@ -64,9 +64,16 @@ Commands : ::
                 daikon cluster shutdown
                 daikon cluster shutdown --cluster <clustername> --host <host> --port <port>
     * Working with Nodes
-        * Stats
+        * List
             examples:
-                COMING SOON!
+                daikon node list
+                daikon node list --extended
+                daikon node list --cluster <clustername> --host <host> --port <port>
+        * Status
+            examples:
+                daikon node status <nodename>
+                daikon node status --extended <nodename>
+                daikon node status --cluster <clustername> --host <host> --port <port> <nodename>
         * Shutdown
             examples:
                 daikon node shutdown <nodename>
