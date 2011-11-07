@@ -98,13 +98,6 @@ def main():
     subparser_cluster_status.add_argument('--port')
     subparser_cluster_status.add_argument('--extended', action='store_true')
 
-    # cluster state
-
-    subparser_cluster_state = subparser_cluster.add_parser('state')
-    subparser_cluster_state.add_argument('--cluster')
-    subparser_cluster_state.add_argument('--host')
-    subparser_cluster_state.add_argument('--port')
-
     # cluster shutdown
 
     subparser_cluster_shutdown = subparser_cluster.add_parser('shutdown')
@@ -171,6 +164,9 @@ def main():
             es_cluster.cluster_status(es_config.config['cluster'],
                     es_config.config['host'], es_config.config['port'],
                     es_args.extended)
+        if es_args.subparser_cluster_name == 'shutdown':
+            es_cluster.cluster_shutdown(es_config.config['cluster'],
+                    es_config.config['host'], es_config.config['port'])
     elif hasattr(es_args, 'subparser_node_name'):
         print 'ping'
 

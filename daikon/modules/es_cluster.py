@@ -41,3 +41,18 @@ def cluster_status(cluster, host, port, extended):
             if extended:
                 print '\t\t\t Name:', data_result[u'nodes'][node][u'name']
                 print '\t\t\t Transport Address:', data_result[u'nodes'][node][u'transport_address']
+
+
+def cluster_shutdown(cluster, host, port):
+    try:
+        request = requests.post('http://' + host + ':' + port + '/_shutdown' )
+        if request.error is not None:
+            print 'ERROR: Shutting Down Cluster : "' + cluster + '" -', request.error
+            sys.exit(1)
+        else:
+            request.raise_for_status()
+    except requests.RequestException, e:
+        print 'ERROR: Shutting Down Cluster : "' + cluster + '" -',  e
+        sys.exit(1)
+    else:
+        print 'SUCCESS: Shutting Down Cluster : "' + cluster + '"'
