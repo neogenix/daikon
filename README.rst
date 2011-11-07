@@ -12,70 +12,65 @@ It's written in Python, and requires python 2.7.x, anyjson, and Python-Requests.
 Installing
 ----------
 
+::
     pip install daikon
     easy_install daikon
 
 Current Functionality:
 ----------------------
 
+::
     * Working with Indexes
-
         * Create Indexes
             examples:
                 daikon index create <indexname>
                 daikon index create --replicas <replicas> --shards <shards> <indexname>
                 daikon index create --cluster <clustername> --host <host> --port <port> <indexname>
-
         * Delete Indexes
             examples:
                 daikon index delete <indexname>
                 daikon index delete --cluster <clustername> --host <host> --port <port> <indexname>
-
         * List Indexes
             examples:
                 daikon index list <indexname>
                 daikon index list --extended <indexname>
                 daikon index list --cluster <clustername> --host <host> --port <port> <indexname>
-
         * Open Indexes
             examples:
                 daikon index open <indexname>
                 daikon index open --cluster <clustername> --host <host> --port <port> <indexname>
-
         * Close Indexes
             examples:
                 daikon index close <indexname>
                 daikon index close --cluster <clustername> --host <host> --port <port> <indexname>
-
         * Status Indexes
             examples:
                 daikon index status <indexname>
                 daikon index status --extended <indexname>
                 daikon index status --cluster <clustername> --host <host> --port <port> <indexname>
-
     * Working with Clusters
-
         * Status View
             examples:
                 daikon cluster status
                 daikon cluster status --extended
                 daikon cluster status --cluster <clustername> --host <host> --port <port>
-
         * Shutdown Clusters
             examples:
-
+                daikon cluster shutdown
+                daikon cluster shutdown --cluster <clustername> --host <host> --port <port>
     * Working with Nodes
-
         * Stats
             examples:
-
+                COMING SOON!
         * Shutdown
             examples:
+                COMING SOON!
 
 
 Planned Functionality:
 ----------------------
 
+::
     * Working with Rivers (and provide plugin supports for rivers)
     * Working with indexes to dump, and import
     * Working with cluster maintennace
