@@ -116,11 +116,10 @@ def main():
     # node list
 
     subparser_node_list = subparser_node.add_parser('list')
-    subparser_node_list.add_argument('list')
     subparser_node_list.add_argument('--cluster')
     subparser_node_list.add_argument('--host')
     subparser_node_list.add_argument('--port')
-    subparser_node_list.add_argument('--extended')
+    subparser_node_list.add_argument('--extended', action='store_true')
 
     # node status
 
@@ -129,6 +128,7 @@ def main():
             metavar='hostname')
     subparser_node_status.add_argument('--cluster')
     subparser_node_status.add_argument('--port')
+    subparser_node_status.add_argument('--extended', action='store_true')
 
     # node shutdown
 
@@ -181,6 +181,9 @@ def main():
         if es_args.subparser_node_name == 'shutdown':
             es_node.node_shutdown(es_args.subparser_node_shutdown_hostname,
                     es_config.config['port'], es_args.delay)
+        if es_args.subparser_node_name == 'status':
+            es_node.node_status(es_args.subparser_node_status_hostname,
+                    es_config.config['port'], es_args.extended)
         if es_args.subparser_node_name == 'list':
             es_node.node_list(es_config.config['host'],
                     es_config.config['port'], es_args.extended)
