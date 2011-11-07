@@ -53,11 +53,11 @@ def index_list(host, port, extended):
         data_result = json.loads(request.content)[u'indices']
         print 'SUCCESS: Listing Indexes'
         for index in data_result:
-            print 'Name:', index
+            print '\t Name:', index
             if extended:
-                print '\t Status:', data_result[index][u'status']
-                print '\t Number Of Shards:', data_result[index][u'number_of_shards']
-                print '\t Number Of Replicas:', data_result[index][u'number_of_replicas']
+                print '\t\t Status:', data_result[index][u'status']
+                print '\t\t Number Of Shards:', data_result[index][u'number_of_shards']
+                print '\t\t Number Of Replicas:', data_result[index][u'number_of_replicas']
 
 
 def index_open(host, port, indexname):
