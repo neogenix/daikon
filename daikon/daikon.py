@@ -143,35 +143,35 @@ def main():
 
     if hasattr(es_args, 'subparser_index_name'):
         if es_args.subparser_index_name == 'list':
-            es_index.index_list(es_config.config["host"],
-                    es_config.config["port"], es_args.extended)
+            es_index.index_list(es_config.config['host'],
+                    es_config.config['port'], es_args.extended)
         if es_args.subparser_index_name == 'create':
-            es_index.index_create(es_config.config["host"],
-                    es_config.config["port"],
+            es_index.index_create(es_config.config['host'],
+                    es_config.config['port'],
                     es_args.subarser_index_create_indexname,
-                    es_config.config["shards"], es_config.config["replicas"])
+                    es_config.config['shards'], es_config.config['replicas'])
         if es_args.subparser_index_name == 'delete':
-            es_index.index_delete(es_config.config["host"],
-                    es_config.config["port"],
+            es_index.index_delete(es_config.config['host'],
+                    es_config.config['port'],
                     es_args.subparser_index_delete_indexname)
         if es_args.subparser_index_name == 'open':
-            es_index.index_open(es_config.config["host"],
-                    es_config.config["port"],
+            es_index.index_open(es_config.config['host'],
+                    es_config.config['port'],
                     es_args.subparser_index_open_indexname)
         if es_args.subparser_index_name == 'close':
-            es_index.index_close(es_config.config["host"],
-                    es_config.config["port"],
+            es_index.index_close(es_config.config['host'],
+                    es_config.config['port'],
                     es_args.subparser_index_close_indexname)
         if es_args.subparser_index_name == 'status':
-            es_index.index_status(es_config.config["host"],
-                    es_config.config["port"],
+            es_index.index_status(es_config.config['host'],
+                    es_config.config['port'],
                     es_args.subparser_index_status_indexname, es_args.extended)
     elif hasattr(es_args, 'subparser_cluster_name'):
         if es_args.subparser_cluster_name == 'status':
             es_cluster.cluster_status(es_config.config['cluster'],
-                    es_config.config["host"], es_config.config["port"],
+                    es_config.config['host'], es_config.config['port'],
                     es_args.extended)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
