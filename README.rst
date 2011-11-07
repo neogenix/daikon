@@ -12,14 +12,19 @@ It's written in Python, and requires python 2.7.x, anyjson, and Python-Requests.
 Installing
 ----------
 
-::
-    pip install daikon
-    easy_install daikon
+This should work : ::
+
+    $ pip install daikon
+
+And even this should too, but you shouldn't use it... : ::
+
+    $ easy_install daikon
 
 Current Functionality:
 ----------------------
 
-::
+Commands : ::
+
     * Working with Indexes
         * Create Indexes
             examples:
@@ -70,7 +75,8 @@ Current Functionality:
 Planned Functionality:
 ----------------------
 
-::
+Future Planned Functionality : ::
+
     * Working with Rivers (and provide plugin supports for rivers)
     * Working with indexes to dump, and import
     * Working with cluster maintennace
