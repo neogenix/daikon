@@ -1,2 +1,2 @@
-daikon.conf
-README
+include daikon.conf
+include README
