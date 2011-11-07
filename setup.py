@@ -11,15 +11,22 @@ setup(name='daikon',
         author='Patrick Ancillotti',
         author_email='patrick@eefy.net',
         url='http://www.github.com/neogenix/daikon',
-        license='',
+        license='LICENSE',
         packages=find_packages(
-            exclude=['ez_setup', 'examples', 'tests']
-            ),
+            exclude=[
+                'ez_setup',
+                'examples',
+                'tests'
+            ]
+        ),
         include_package_data=True,
         zip_safe=False,
-        install_requires=['requests', 'anyjson'],
-        entry_points =
-            {'console_scripts':
+        install_requires=[
+            'requests',
+            'anyjson'
+        ],
+        entry_points={
+            'console_scripts':
                 ['daikon = daikon.daikon:main']
-            }
+        }
 )
