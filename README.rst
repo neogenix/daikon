@@ -12,14 +12,12 @@ It's written in Python, and requires python 2.7.x, anyjson, and Python-Requests.
 Installing
 ----------
 
-::
     pip install daikon
     easy_install daikon
 
 Current Functionality:
 ----------------------
 
-::
     * Working with Indexes
 
         * Create Indexes
