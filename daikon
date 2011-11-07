@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-from modules import es_index, es_config
+from modules import es_index, es_cluster, es_config
 
 VERSION = '0.03'
 
@@ -90,12 +90,13 @@ def main():
             description='valid subcommands', help='additional help',
             dest='subparser_cluster_name')
 
-    # cluster health
+    # cluster status
 
-    subparser_cluster_health = subparser_cluster.add_parser('health')
-    subparser_cluster_health.add_argument('--cluster')
-    subparser_cluster_health.add_argument('--host')
-    subparser_cluster_health.add_argument('--port')
+    subparser_cluster_status = subparser_cluster.add_parser('status')
+    subparser_cluster_status.add_argument('--cluster')
+    subparser_cluster_status.add_argument('--host')
+    subparser_cluster_status.add_argument('--port')
+    subparser_cluster_status.add_argument('--extended', action='store_true')
 
     # cluster state
 
@@ -140,7 +141,7 @@ def main():
     es_args = parser_main.parse_args()
     es_config.configuration(es_args)
 
-    if es_args.subparser_index_name:
+    if hasattr(es_args, 'subparser_index_name'):
         if es_args.subparser_index_name == 'list':
             es_index.index_list(es_config.config["host"],
                     es_config.config["port"], es_args.extended)
@@ -165,6 +166,11 @@ def main():
             es_index.index_status(es_config.config["host"],
                     es_config.config["port"],
                     es_args.subparser_index_status_indexname, es_args.extended)
+    elif hasattr(es_args, 'subparser_cluster_name'):
+        if es_args.subparser_cluster_name == 'status':
+            es_cluster.cluster_status(es_config.config['cluster'],
+                    es_config.config["host"], es_config.config["port"],
+                    es_args.extended)
 
 
 if __name__ == "__main__":
