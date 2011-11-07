@@ -48,10 +48,6 @@ Current Functions:
                 daikon cluster status --extended
                 daikon cluster status --cluster <clustername> --host <host> --port <port>
 
-
-        * State View
-            examples:
-
         * Shutdown Clusters
             examples:
 
