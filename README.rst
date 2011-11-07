@@ -9,6 +9,10 @@ with ElasticSearch a little easier than using curl... you know for us lazy folks
 
 It's written in Python, and requires python 2.7.x, anyjson, and Python-Requests.
 
+Why 'daikon'. Well, 'daikon' is a radish that is used in the making of kimchi.
+For those who know ES, you'll know what that means ;) and of course HUGE shout
+out to @kimchy
+
 Installing
 ----------
 
