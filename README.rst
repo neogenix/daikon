@@ -69,7 +69,8 @@ Commands : ::
                 COMING SOON!
         * Shutdown
             examples:
-                COMING SOON!
+                daikon node shutdown <nodename>
+                daikon node shutdown --cluster <clustername> --port <port> <nodename>
 
 
 Planned Functionality:

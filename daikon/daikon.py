@@ -113,6 +113,15 @@ def main():
             description='valid subcommands', help='additional help',
             dest='subparser_node_name')
 
+    # node list
+
+    subparser_node_list = subparser_node.add_parser('list')
+    subparser_node_list.add_argument('list')
+    subparser_node_list.add_argument('--cluster')
+    subparser_node_list.add_argument('--host')
+    subparser_node_list.add_argument('--port')
+    subparser_node_list.add_argument('--extended')
+
     # node status
 
     subparser_node_status = subparser_node.add_parser('status')
@@ -126,7 +135,7 @@ def main():
     subparser_node_shutdown = subparser_node.add_parser('shutdown')
     subparser_node_shutdown.add_argument('subparser_node_shutdown_hostname',
             metavar='hostname')
-    subparser_node_shutdown.add_argument('--delay')
+    subparser_node_shutdown.add_argument('--delay', default=None)
     subparser_node_shutdown.add_argument('--port')
     subparser_node_shutdown.add_argument('--cluster')
 
@@ -171,7 +180,10 @@ def main():
     elif hasattr(es_args, 'subparser_node_name'):
         if es_args.subparser_node_name == 'shutdown':
             es_node.node_shutdown(es_args.subparser_node_shutdown_hostname,
-                    es_config.config['port'])
+                    es_config.config['port'], es_args.delay)
+        if es_args.subparser_node_name == 'list':
+            es_node.node_list(es_config.config['host'],
+                    es_config.config['port'], es_args.extended)
 
 
 if __name__ == '__main__':
