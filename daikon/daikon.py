@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #
 #   Copyright [2011] [Patrick Ancillotti]
 #
@@ -16,8 +14,13 @@
 #   limitations under the License.
 #
 
+#!/usr/bin/env python
+
 import argparse
-from modules import es_index, es_cluster, es_config, es_node
+import es_index
+import es_cluster
+import es_config
+import es_node
 
 VERSION = '1.02'
 
