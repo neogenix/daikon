@@ -15,11 +15,10 @@
 #
 
 from setuptools import setup, find_packages
-
-VERSION = '1.03'
+from daikon import __version__
 
 setup(name='daikon',
-        version=VERSION,
+        version=__version__,
         description='ElasticSearch CLI',
         long_description=''' ''',
         classifiers=[],

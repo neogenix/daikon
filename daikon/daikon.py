@@ -22,15 +22,13 @@ import index
 import cluster
 import node
 
-VERSION = '1.03'
-
 
 def main():
     parser_main = argparse.ArgumentParser(description='ElasticSearch CLI v'
-            + VERSION)
+            + __version__)
 
     parser_main.add_argument('--version', action='version',
-            version=VERSION)
+            version=__version__)
 
     parser_main.add_argument('--cluster')
     parser_main.add_argument('--host')
