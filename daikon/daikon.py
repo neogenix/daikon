@@ -16,19 +16,22 @@
 
 #!/usr/bin/env python
 
-import config
 import argparse
+
+import config
 import index
 import cluster
 import node
 
 
+VERSION = __import__('daikon').__version__
+
 def main():
     parser_main = argparse.ArgumentParser(description='ElasticSearch CLI v'
-            + __version__)
+            + VERSION)
 
     parser_main.add_argument('--version', action='version',
-            version=__version__)
+            version=VERSION)
 
     parser_main.add_argument('--cluster')
     parser_main.add_argument('--host')
