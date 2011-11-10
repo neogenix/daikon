@@ -16,13 +16,13 @@
 
 #!/usr/bin/env python
 
+import config
 import argparse
-import es_index
-import es_cluster
-import es_config
-import es_node
+import index
+import cluster
+import node
 
-VERSION = '1.02'
+VERSION = '1.03'
 
 
 def main():
@@ -160,52 +160,52 @@ def main():
 
     # end
 
-    es_args = parser_main.parse_args()
-    es_config.configuration(es_args)
+    args = parser_main.parse_args()
+    config.configuration(args)
 
-    if hasattr(es_args, 'subparser_index_name'):
-        if es_args.subparser_index_name == 'list':
-            es_index.index_list(es_config.config['host'],
-                    es_config.config['port'], es_args.extended)
-        if es_args.subparser_index_name == 'create':
-            es_index.index_create(es_config.config['host'],
-                    es_config.config['port'],
-                    es_args.subarser_index_create_indexname,
-                    es_config.config['shards'], es_config.config['replicas'])
-        if es_args.subparser_index_name == 'delete':
-            es_index.index_delete(es_config.config['host'],
-                    es_config.config['port'],
-                    es_args.subparser_index_delete_indexname)
-        if es_args.subparser_index_name == 'open':
-            es_index.index_open(es_config.config['host'],
-                    es_config.config['port'],
-                    es_args.subparser_index_open_indexname)
-        if es_args.subparser_index_name == 'close':
-            es_index.index_close(es_config.config['host'],
-                    es_config.config['port'],
-                    es_args.subparser_index_close_indexname)
-        if es_args.subparser_index_name == 'status':
-            es_index.index_status(es_config.config['host'],
-                    es_config.config['port'],
-                    es_args.subparser_index_status_indexname, es_args.extended)
-    elif hasattr(es_args, 'subparser_cluster_name'):
-        if es_args.subparser_cluster_name == 'status':
-            es_cluster.cluster_status(es_config.config['cluster'],
-                    es_config.config['host'], es_config.config['port'],
-                    es_args.extended)
-        if es_args.subparser_cluster_name == 'shutdown':
-            es_cluster.cluster_shutdown(es_config.config['cluster'],
-                    es_config.config['host'], es_config.config['port'])
-    elif hasattr(es_args, 'subparser_node_name'):
-        if es_args.subparser_node_name == 'shutdown':
-            es_node.node_shutdown(es_args.subparser_node_shutdown_hostname,
-                    es_config.config['port'], es_args.delay)
-        if es_args.subparser_node_name == 'status':
-            es_node.node_status(es_args.subparser_node_status_hostname,
-                    es_config.config['port'], es_args.extended)
-        if es_args.subparser_node_name == 'list':
-            es_node.node_list(es_config.config['host'],
-                    es_config.config['port'], es_args.extended)
+    if hasattr(args, 'subparser_index_name'):
+        if args.subparser_index_name == 'list':
+            index.index_list(config.config['host'],
+                    config.config['port'], args.extended)
+        if args.subparser_index_name == 'create':
+            index.index_create(config.config['host'],
+                    config.config['port'],
+                    args.subarser_index_create_indexname,
+                    config.config['shards'], config.config['replicas'])
+        if args.subparser_index_name == 'delete':
+            index.index_delete(config.config['host'],
+                    config.config['port'],
+                    args.subparser_index_delete_indexname)
+        if args.subparser_index_name == 'open':
+            index.index_open(config.config['host'],
+                    config.config['port'],
+                    args.subparser_index_open_indexname)
+        if args.subparser_index_name == 'close':
+            index.index_close(config.config['host'],
+                    config.config['port'],
+                    args.subparser_index_close_indexname)
+        if args.subparser_index_name == 'status':
+            index.index_status(config.config['host'],
+                    config.config['port'],
+                    args.subparser_index_status_indexname, args.extended)
+    elif hasattr(args, 'subparser_cluster_name'):
+        if args.subparser_cluster_name == 'status':
+            cluster.cluster_status(config.config['cluster'],
+                    config.config['host'], config.config['port'],
+                    args.extended)
+        if args.subparser_cluster_name == 'shutdown':
+            cluster.cluster_shutdown(config.config['cluster'],
+                    config.config['host'], config.config['port'])
+    elif hasattr(args, 'subparser_node_name'):
+        if args.subparser_node_name == 'shutdown':
+            node.node_shutdown(args.subparser_node_shutdown_hostname,
+                    config.config['port'], args.delay)
+        if args.subparser_node_name == 'status':
+            node.node_status(args.subparser_node_status_hostname,
+                    config.config['port'], args.extended)
+        if args.subparser_node_name == 'list':
+            node.node_list(config.config['host'],
+                    config.config['port'], args.extended)
 
 
 if __name__ == '__main__':

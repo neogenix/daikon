@@ -16,7 +16,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '1.02'
+VERSION = '1.03'
 
 setup(name='daikon',
         version=VERSION,
