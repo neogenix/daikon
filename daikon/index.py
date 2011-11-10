@@ -21,7 +21,7 @@ import sys
 
 def index_create(host, port, indexname, shards, replicas):
     data_request = json.dumps({"settings" : { "number_of_shards" : shards,
-        "number_of_replicas" : replicas } }, sort_keys=True, indent=4)
+        "number_of_replicas" : replicas } })
 
     try:
         request = requests.post('http://' + host + ':' + port + '/' +
