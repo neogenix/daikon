@@ -17,7 +17,7 @@
 import ConfigParser
 import os.path
 
-from types import ConfigError
+from exceptions import ConfigError
 
 
 class configuration:

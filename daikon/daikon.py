@@ -17,7 +17,7 @@
 #!/usr/bin/env python
 
 from config import configuration
-from types import ConfigError
+from exceptions import ConfigError
 
 import index
 import cluster
