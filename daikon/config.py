@@ -26,7 +26,7 @@ class configuration:
         self.arguments = arguments
 
     def config_setup(self):
-        """ setup configuration, and read config files """
+        """ Setup configuration, and read config files """
 
         self.config_parser = ConfigParser.ConfigParser()
 
@@ -39,6 +39,8 @@ class configuration:
             return self.config_parser
 
     def cluster(self):
+        """ Cluster configuration """
+
         if hasattr(self.arguments, "cluster") and self.arguments.cluster is not None:
             cluster = self.arguments.cluster
         else:
@@ -46,6 +48,8 @@ class configuration:
         return cluster
 
     def host(self):
+        """ Host configuration """
+
         if not self.config_parser.get(self.cluster(), 'host'):
             raise ConfigError('No default host defined!\n')
         elif hasattr(self.arguments, 'host') and self.arguments.host:
@@ -55,6 +59,8 @@ class configuration:
         return host
 
     def port(self):
+        """ Port configuration """
+
         if not self.config_parser.get(self.cluster(), 'port'):
             raise ConfigError('No default port defined!\n')
         elif hasattr(self.arguments, 'port') and self.arguments.port:
@@ -64,6 +70,8 @@ class configuration:
         return port
 
     def replicas(self):
+        """ Replicas configuration """
+
         if not self.config_parser.get(self.cluster(), 'replicas'):
             raise ConfigError('No default replicas defined!\n')
         elif hasattr(self.arguments, 'replicas') and self.arguments.replicas:
@@ -73,6 +81,8 @@ class configuration:
         return replicas
 
     def shards(self):
+        """ Shards configuration """
+
         if not self.config_parser.get(self.cluster(), 'shards'):
             raise ConfigError('No default shards defined!\n')
         elif hasattr(self.arguments, 'shards') and self.arguments.shards:

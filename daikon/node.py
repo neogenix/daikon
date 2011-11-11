@@ -18,6 +18,7 @@ import requests
 import anyjson as json
 import sys
 
+
 def node_status(host, port, extended):
     try:
         request = requests.get('http://' + host + ':' + port +

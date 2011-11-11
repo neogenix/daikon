@@ -16,14 +16,14 @@
 
 #!/usr/bin/env python
 
-from config import configuration
-from exceptions import ConfigError
-
 import index
 import cluster
 import node
-
+import sys
 import argparse
+
+from config import configuration
+from exceptions import ConfigError
 
 VERSION = __import__('daikon').__version__
 
@@ -164,8 +164,13 @@ def main():
     # end
 
     args = parser_main.parse_args()
-    config = configuration(args)
-    config.config_setup()
+
+    try:
+        config = configuration(args)
+        config.config_setup()
+    except ConfigError as error:
+        print error
+        sys.exit(1)
 
     if hasattr(args, 'subparser_index_name'):
         if args.subparser_index_name == 'list':
@@ -205,7 +210,4 @@ def main():
 
 
 if __name__ == '__main__':
-    try:
         main()
-    except ConfigError as error:
-        print 'ERROR: Configuration Error - %s' % error

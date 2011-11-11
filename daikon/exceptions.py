@@ -14,6 +14,7 @@
 #   limitations under the License.
 #
 
+
 class DaikonError(Exception):
     """ Base Exception Class """
 

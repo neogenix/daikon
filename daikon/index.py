@@ -90,7 +90,8 @@ def index_list(host, port, extended):
                 else:
                     print '\t\t Status:', data_result_health[index][u'status']
                 print '\t\t Number Of Shards:', data_result_state[index][u'settings'][u'index.number_of_shards']
-                print '\t\t Number Of Replicas:', data_result_state[index][u'settings'][u'index.number_of_replicas'] 
+                print '\t\t Number Of Replicas:', data_result_state[index][u'settings'][u'index.number_of_replicas']
+
 
 def index_open(host, port, indexname):
     try:
