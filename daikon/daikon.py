@@ -17,6 +17,8 @@
 #!/usr/bin/env python
 
 from config import configuration
+from types import ConfigError
+
 import index
 import cluster
 import node
@@ -24,6 +26,7 @@ import node
 import argparse
 
 VERSION = __import__('daikon').__version__
+
 
 def main():
     parser_main = argparse.ArgumentParser(description='ElasticSearch CLI v'
@@ -202,4 +205,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except ConfigError as error:
+        print 'ERROR: Configuration Error - %s' % error
