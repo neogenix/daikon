@@ -19,7 +19,6 @@
 import index
 import cluster
 import node
-import sys
 import argparse
 
 from config import configuration
@@ -170,7 +169,7 @@ def main():
         config.config_setup()
     except ConfigError as error:
         print error
-        sys.exit(1)
+        return 1
 
     if hasattr(args, 'subparser_index_name'):
         if args.subparser_index_name == 'list':

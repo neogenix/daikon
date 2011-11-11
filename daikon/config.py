@@ -56,6 +56,7 @@ class configuration:
             host = self.arguments.host
         else:
             host = self.config_parser.get(self.cluster(), 'host')
+
         return host
 
     def port(self):
