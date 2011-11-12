@@ -21,6 +21,8 @@ from exceptions import ConfigError
 
 
 class configuration:
+    _host = None
+    _port = None
 
     def __init__(self, arguments):
         self.arguments = arguments
@@ -49,6 +51,8 @@ class configuration:
 
     def host(self):
         """ Host configuration """
+        if self._host is not None:
+            return self._host
 
         if not self.config_parser.get(self.cluster(), 'host'):
             raise ConfigError('No default host defined!\n')
@@ -57,10 +61,13 @@ class configuration:
         else:
             host = self.config_parser.get(self.cluster(), 'host')
 
+        self._host = host
         return host
 
     def port(self):
         """ Port configuration """
+        if self._port is not None:
+            return self._port
 
         if not self.config_parser.get(self.cluster(), 'port'):
             raise ConfigError('No default port defined!\n')
@@ -68,6 +75,8 @@ class configuration:
             port = self.arguments.port
         else:
             port = self.config_parser.get(self.cluster(), 'port')
+
+        self._port = port
         return port
 
     def replicas(self):
