@@ -14,18 +14,23 @@
 #   limitations under the License.
 #
 
+import requests
 import ConfigParser
 import os.path
+import anyjson as json
 
 from exceptions import ConfigError
 
 
 class configuration:
-    _host = None
-    _port = None
 
     def __init__(self, arguments):
         self.arguments = arguments
+        self._host = None
+        self._port = None
+        self._replicas = None
+        self._shards = None
+        self._es_version = None
 
     def config_setup(self):
         """ Setup configuration, and read config files """
@@ -51,6 +56,7 @@ class configuration:
 
     def host(self):
         """ Host configuration """
+
         if self._host is not None:
             return self._host
 
@@ -66,6 +72,7 @@ class configuration:
 
     def port(self):
         """ Port configuration """
+
         if self._port is not None:
             return self._port
 
@@ -82,21 +89,46 @@ class configuration:
     def replicas(self):
         """ Replicas configuration """
 
+        if self._replicas is not None:
+            return self._replicas
+
         if not self.config_parser.get(self.cluster(), 'replicas'):
             raise ConfigError('No default replicas defined!\n')
         elif hasattr(self.arguments, 'replicas') and self.arguments.replicas:
-            replicas = self.arguments.replicas
+            self._replicas = self.arguments.replicas
         else:
-            replicas = self.config_parser.get(self.cluster(), 'replicas')
-        return replicas
+            self._replicas = self.config_parser.get(self.cluster(), 'replicas')
+        return self._replicas
 
     def shards(self):
         """ Shards configuration """
 
+        if self._shards is not None:
+            return self._shards
+
         if not self.config_parser.get(self.cluster(), 'shards'):
             raise ConfigError('No default shards defined!\n')
         elif hasattr(self.arguments, 'shards') and self.arguments.shards:
-            shards = self.arguments.shards
+            self._shards = self.arguments.shards
         else:
-            shards = self.config_parser.get(self.cluster(), 'shards')
-        return shards
+            self._shards = self.config_parser.get(self.cluster(), 'shards')
+        return self._shards
+
+    def es_version(self):
+        """ Get ElasticSearch Version """
+
+        if self._es_version is not None:
+            return self._es_version
+
+        if self._host is None:
+            self._host = self.host()
+
+        if self._port is None:
+            self._port = self.port()
+
+        request_url = 'http://%s:%s' % (self._host, self._port)
+        request = requests.get(request_url)
+
+        self._es_version = json.loads(request.content)[u'version'][u'number']
+
+        return self._es_version
