@@ -26,6 +26,7 @@ class configuration:
 
     def __init__(self, arguments):
         self.arguments = arguments
+        self._cluster = None
         self._host = None
         self._port = None
         self._replicas = None
@@ -33,7 +34,7 @@ class configuration:
         self._es_version = None
 
     def config_setup(self):
-        """ Setup configuration, and read config files """
+        ''' Setup configuration, and read config files '''
 
         self.config_parser = ConfigParser.ConfigParser()
 
@@ -46,16 +47,20 @@ class configuration:
             return self.config_parser
 
     def cluster(self):
-        """ Cluster configuration """
+        ''' Cluster configuration '''
 
-        if hasattr(self.arguments, "cluster") and self.arguments.cluster is not None:
-            cluster = self.arguments.cluster
+        if self._cluster is not None:
+            return self._cluster
+
+        if hasattr(self.arguments, 'cluster') and self.arguments.cluster is not None:
+            self._cluster = self.arguments.cluster
         else:
-            cluster = 'default'
-        return cluster
+            self._cluster = 'default'
+
+        return self._cluster
 
     def host(self):
-        """ Host configuration """
+        ''' Host configuration '''
 
         if self._host is not None:
             return self._host
@@ -63,15 +68,14 @@ class configuration:
         if not self.config_parser.get(self.cluster(), 'host'):
             raise ConfigError('No default host defined!\n')
         elif hasattr(self.arguments, 'host') and self.arguments.host:
-            host = self.arguments.host
+            self._hsot = self.arguments.host
         else:
-            host = self.config_parser.get(self.cluster(), 'host')
+            self._host = self.config_parser.get(self.cluster(), 'host')
 
-        self._host = host
-        return host
+        return self._host
 
     def port(self):
-        """ Port configuration """
+        ''' Port configuration '''
 
         if self._port is not None:
             return self._port
@@ -79,15 +83,14 @@ class configuration:
         if not self.config_parser.get(self.cluster(), 'port'):
             raise ConfigError('No default port defined!\n')
         elif hasattr(self.arguments, 'port') and self.arguments.port:
-            port = self.arguments.port
+            self._port = self.arguments.port
         else:
-            port = self.config_parser.get(self.cluster(), 'port')
+            self._port = self.config_parser.get(self.cluster(), 'port')
 
-        self._port = port
-        return port
+        return self._port
 
     def replicas(self):
-        """ Replicas configuration """
+        ''' Replicas configuration '''
 
         if self._replicas is not None:
             return self._replicas
@@ -98,10 +101,11 @@ class configuration:
             self._replicas = self.arguments.replicas
         else:
             self._replicas = self.config_parser.get(self.cluster(), 'replicas')
+
         return self._replicas
 
     def shards(self):
-        """ Shards configuration """
+        ''' Shards configuration '''
 
         if self._shards is not None:
             return self._shards
@@ -112,10 +116,11 @@ class configuration:
             self._shards = self.arguments.shards
         else:
             self._shards = self.config_parser.get(self.cluster(), 'shards')
+
         return self._shards
 
     def es_version(self):
-        """ Get ElasticSearch Version """
+        ''' Get ElasticSearch Version '''
 
         if self._es_version is not None:
             return self._es_version
@@ -128,6 +133,11 @@ class configuration:
 
         request_url = 'http://%s:%s' % (self._host, self._port)
         request = requests.get(request_url)
+
+        #if request.error is not None:
+        #    raise ConfigError(request.error)
+        #else:
+        #    self._es_version = json.loads(request.content)[u'version'][u'number']
 
         self._es_version = json.loads(request.content)[u'version'][u'number']
 
