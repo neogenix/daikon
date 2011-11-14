@@ -20,109 +20,119 @@ import sys
 
 
 def index_create(host, port, indexname, shards, replicas):
-    data_request = json.dumps('{"settings" : { "number_of_shards" : ' +
-            shards + ', "number_of_replicas" : ' + replicas + ' } }')
-
     try:
-        request = requests.post('http://' + host + ':' + port + '/' +
-                indexname, data=data_request)
+        request_data = json.dumps('{"settings" : { "number_of_shards" : %s, \
+                "number_of_replicas" : %s } }') % (shards, replicas)
+        request_url = 'http://%s:%s/%s' % (host, port, indexname)
+        request = requests.post(request_url, data=request_data)
+
         if request.error is not None:
-            print 'ERROR: Creating Index : "' + indexname + '" -', request.error
+            print 'ERROR: Creating Index : "%s" - %s' % \
+                    (indexname, request.error)
             sys.exit(1)
         else:
             request.raise_for_status()
     except requests.RequestException, e:
-        print 'ERROR: Creating Index : "' + indexname + '" -',  e
+        print 'ERROR: Creating Index : "%s" - %s' % (indexname, e)
         sys.exit(1)
     else:
-        print 'SUCCESS: Creating Index : "' + indexname + '"'
+        print 'SUCCESS: Creating Index : "%s"' % (indexname)
 
 
 def index_delete(host, port, indexname):
     try:
-        request = requests.delete('http://' + host + ':' + port + '/' + indexname)
+        request_url = 'http://%s:%s/%s' % (host, port, indexname)
+        request = requests.delete(request_url)
+
         if request.error is not None:
-            print 'ERROR: Deleteing Index : "' + indexname + '" -', request.error
+            print 'ERROR: Deleteing Index : "%s" - %s' % (indexname,
+                    request.error)
             sys.exit(1)
         else:
             request.raise_for_status()
     except requests.RequestException, e:
-        print 'ERROR: Deleting Index : "' + indexname + '" -',  e
+        print 'ERROR: Deleting Index : "%s" - %s' % (indexname,  e)
         sys.exit(1)
     else:
-        print 'SUCCESS: Deleting Index : "' + indexname + '"'
+        print 'SUCCESS: Deleting Index : "%s" - %s' % (indexname)
 
 
 def index_list(host, port, extended):
     try:
-        request_health = requests.get('http://' + host + ':' + port +
-                '/_cluster/health?level=indices')
+        request_health_url = 'http://%s:%s/_cluster/health?level=indices' % \
+                (host, port)
+        request_health = requests.get(request_health_url)
         if request_health.error is not None:
-            print 'ERROR: Listing Indexes :', request_health.error
+            print 'ERROR: Listing Indexes : %s' % (request_health.error)
             sys.exit(1)
         else:
             request_health.raise_for_status()
 
-        request_state = requests.get('http://' + host + ':' + port +
-                '/_cluster/state')
+        request_state_url = 'http://%s:%s/_cluster/state' % (host, port)
+        request_state = requests.get(request_state_url)
         if request_state.error is not None:
-            print 'ERROR: Listing Indexes :', request_state.error
+            print 'ERROR: Listing Indexes : %s' % (request_state.error)
             sys.exit(1)
         else:
             request_state.raise_for_status()
 
     except request_health.RequestException, e:
-        print 'ERROR:  Listing Indexes -', e
+        print 'ERROR:  Listing Indexes - %s' % (e)
         sys.exit(1)
     except request_state.RequestException, e:
-        print 'ERROR:  Listing Indexes -', e
+        print 'ERROR:  Listing Indexes - %s' % (e)
         sys.exit(1)
     else:
         data_result_state = json.loads(request_state.content)[u'metadata'][u'indices']
         data_result_health = json.loads(request_health.content)[u'indices']
         print 'SUCCESS: Listing Indexes'
         for index in data_result_state:
-            print '\t Name:', index
+            print '\t Name: %s' % (index)
             if extended:
-                print '\t\t State:', data_result_state[index][u'state']
+                print '\t\t State: %s' % (data_result_state[index][u'state'])
                 if data_result_state[index][u'state'] == 'close':
                     print '\t\t Status: CLOSED'
                 else:
-                    print '\t\t Status:', data_result_health[index][u'status']
-                print '\t\t Number Of Shards:', data_result_state[index][u'settings'][u'index.number_of_shards']
-                print '\t\t Number Of Replicas:', data_result_state[index][u'settings'][u'index.number_of_replicas']
+                    print '\t\t Status: %s' % \
+                            (data_result_health[index][u'status'])
+                print '\t\t Number Of Shards: %s' % \
+                        (data_result_state[index][u'settings'][u'index.number_of_shards'])
+                print '\t\t Number Of Replicas: %s' % \
+                        (data_result_state[index][u'settings'][u'index.number_of_replicas'])
 
 
 def index_open(host, port, indexname):
     try:
-        request = requests.post('http://' + host + ':' + port + '/' +
-                indexname + '/_open')
+        request_url = 'http://%s:%s/%s/_open' % (host, port, indexname)
+        request = requests.post(request_url)
         if request.error is not None:
-            print 'ERROR: Opening Index : "' + indexname + '" -', request.error
+            print 'ERROR: Opening Index : "%s" - %s' % \
+                (indexname, request.error)
             sys.exit(1)
         else:
             request.raise_for_status()
     except requests.RequestException, e:
-        print 'ERROR: Opening Index : "' + indexname + '" -',  e
+        print 'ERROR: Opening Index : "%s" - %s' % (indexname, e)
         sys.exit(1)
     else:
-        print 'SUCCESS: Opening Index : "' + indexname + '"'
+        print 'SUCCESS: Opening Index : "%s"' % (indexname)
 
 
 def index_close(host, port, indexname):
     try:
-        request = requests.post('http://' + host + ':' + port + '/' +
-                indexname + '/_close')
+        request_url = 'http://%s:%s/%s/_close' % (host, port, indexname)
+        request = requests.post(request_url)
         if request.error is not None:
-            print 'ERROR: Closing Index : "' + indexname + '" -', request.error
+            print 'ERROR: Closing Index : "%s" - %s' % (indexname, \
+                    request.error)
             sys.exit(1)
         else:
             request.raise_for_status()
     except requests.RequestException, e:
-        print 'ERROR: Closing Index : "' + indexname + '" -',  e
+        print 'ERROR: Closing Index : "%s" - %s' % (indexname, e)
         sys.exit(1)
     else:
-        print 'SUCCESS: Closing Index : "' + indexname + '"'
+        print 'SUCCESS: Closing Index : "%s"' % (indexname)
 
 
 def index_status(host, port, indexname, extended):

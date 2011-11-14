@@ -16,20 +16,20 @@
 
 
 class DaikonError(Exception):
-    """ Base Exception Class """
+    ''' Base Exception Class '''
 
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
-        return "ERROR: Error - " + self.value
+        return 'ERROR: Error - %s' % (self.value)
 
 
 class ConfigError(DaikonError):
-    """ Config Exception Class """
+    ''' Config Exception Class '''
 
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
-        return "ERROR: Configuration Error - " + self.value
+        return 'ERROR: Configuration Error - %s' % (self.value)

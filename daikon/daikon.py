@@ -167,9 +167,11 @@ def main():
     try:
         config = configuration(args)
         config.config_setup()
+        config.es_version()
     except ConfigError as error:
         print error
         return 1
+
 
     if hasattr(args, 'subparser_index_name'):
         if args.subparser_index_name == 'list':
