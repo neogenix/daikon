@@ -33,3 +33,13 @@ class ConfigError(DaikonError):
 
     def __str__(self):
         return 'ERROR: Configuration Error - %s' % (self.value)
+
+
+class IndexError(DaikonError):
+    ''' Index Exception Class '''
+
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return 'ERROR: Index Error - %s' % (self.value)
