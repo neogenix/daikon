@@ -31,7 +31,7 @@ def index_create(host, port, indexname, shards, replicas):
         request.raise_for_status()
         print 'SUCCESS: Creating Index : "%s"' % (indexname)
     except (requests.RequestException, urllib2.HTTPError), e:
-        raise ActionIndexError('Error Creating Index' + str(e))
+        raise ActionIndexError('Error Creating Index - %s' % (e))
 
 
 def index_delete(host, port, indexname):

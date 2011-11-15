@@ -168,6 +168,43 @@ def main():
         config = configuration(args)
         config.config_setup()
         config.es_version()
+
+        if hasattr(args, 'subparser_index_name'):
+            if args.subparser_index_name == 'list':
+                index.index_list(config.host(), config.port(), args.extended)
+            if args.subparser_index_name == 'create':
+                index.index_create(config.host(), config.port(),
+                        args.subarser_index_create_indexname, config.shards(),
+                        config.replicas())
+            if args.subparser_index_name == 'delete':
+                index.index_delete(config.host(), config.port(),
+                        args.subparser_index_delete_indexname)
+            if args.subparser_index_name == 'open':
+                index.index_open(config.host(), config.port(),
+                        args.subparser_index_open_indexname)
+            if args.subparser_index_name == 'close':
+                index.index_close(config.host(), config.port(),
+                        args.subparser_index_close_indexname)
+            if args.subparser_index_name == 'status':
+                index.index_status(config.host(), config.port(),
+                        args.subparser_index_status_indexname, args.extended)
+        elif hasattr(args, 'subparser_cluster_name'):
+            if args.subparser_cluster_name == 'status':
+                cluster.cluster_status(config.cluster(), config.host(),
+                        config.port(), args.extended)
+            if args.subparser_cluster_name == 'shutdown':
+                cluster.cluster_shutdown(config.cluster(), config.host(),
+                        config.port())
+        elif hasattr(args, 'subparser_node_name'):
+            if args.subparser_node_name == 'shutdown':
+                node.node_shutdown(args.subparser_node_shutdown_hostname,
+                        config.port(), args.delay)
+            if args.subparser_node_name == 'status':
+                node.node_status(args.subparser_node_status_hostname,
+                        config.port(), args.extended)
+            if args.subparser_node_name == 'list':
+                node.node_list(config.host(), config.port(), args.extended)
+
     except ConfigError as error:
         print error
         return 1
@@ -177,42 +214,6 @@ def main():
     except DaikonError as error:
         print error
         return 1
-
-    if hasattr(args, 'subparser_index_name'):
-        if args.subparser_index_name == 'list':
-            index.index_list(config.host(), config.port(), args.extended)
-        if args.subparser_index_name == 'create':
-            index.index_create(config.host(), config.port(),
-                    args.subarser_index_create_indexname, config.shards(),
-                    config.replicas())
-        if args.subparser_index_name == 'delete':
-            index.index_delete(config.host(), config.port(),
-                    args.subparser_index_delete_indexname)
-        if args.subparser_index_name == 'open':
-            index.index_open(config.host(), config.port(),
-                    args.subparser_index_open_indexname)
-        if args.subparser_index_name == 'close':
-            index.index_close(config.host(), config.port(),
-                    args.subparser_index_close_indexname)
-        if args.subparser_index_name == 'status':
-            index.index_status(config.host(), config.port(),
-                    args.subparser_index_status_indexname, args.extended)
-    elif hasattr(args, 'subparser_cluster_name'):
-        if args.subparser_cluster_name == 'status':
-            cluster.cluster_status(config.cluster(), config.host(),
-                    config.port(), args.extended)
-        if args.subparser_cluster_name == 'shutdown':
-            cluster.cluster_shutdown(config.cluster(), config.host(),
-                    config.port())
-    elif hasattr(args, 'subparser_node_name'):
-        if args.subparser_node_name == 'shutdown':
-            node.node_shutdown(args.subparser_node_shutdown_hostname,
-                    config.port(), args.delay)
-        if args.subparser_node_name == 'status':
-            node.node_status(args.subparser_node_status_hostname,
-                    config.port(), args.extended)
-        if args.subparser_node_name == 'list':
-            node.node_list(config.host(), config.port(), args.extended)
 
 
 if __name__ == '__main__':
