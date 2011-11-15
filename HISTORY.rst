@@ -3,6 +3,7 @@ History
 
 1.10 (2011-11-09)
 +++++++++++++++++
+* Updated all modules, and main to use new exceptions.py
 * Moved modules around to make them more pythonish
 * Updated LICENSE and added header to all .py files
 
