@@ -172,7 +172,6 @@ def main():
         print error
         return 1
 
-
     if hasattr(args, 'subparser_index_name'):
         if args.subparser_index_name == 'list':
             index.index_list(config.host(), config.port(), args.extended)
