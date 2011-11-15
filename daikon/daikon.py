@@ -21,7 +21,7 @@ import cluster
 import node
 import argparse
 
-from exceptions import ConfigError, ActionIndexError
+from exceptions import ConfigError, ActionIndexError, ActionNodeError
 from config import configuration
 
 VERSION = __import__('daikon').__version__
@@ -156,7 +156,7 @@ def main():
     subparser_node_shutdown = subparser_node.add_parser('shutdown')
     subparser_node_shutdown.add_argument('subparser_node_shutdown_hostname',
             metavar='hostname')
-    subparser_node_shutdown.add_argument('--delay', default=None)
+    subparser_node_shutdown.add_argument('--delay', default=0)
     subparser_node_shutdown.add_argument('--port')
     subparser_node_shutdown.add_argument('--cluster')
 
@@ -208,6 +208,9 @@ def main():
         print error
         return 1
     except ActionIndexError as error:
+        print error
+        return 1
+    except ActionNodeError as error:
         print error
         return 1
 
