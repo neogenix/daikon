@@ -46,10 +46,20 @@ class ActionIndexError(DaikonError):
 
 
 class ActionNodeError(DaikonError):
-    ''' Index Exception Class '''
+    ''' Node Exception Class '''
 
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
-        return 'ERROR: Index Error - %s' % (self.value)
+        return 'ERROR: Node Error - %s' % (self.value)
+
+
+class ActionClusterError(DaikonError):
+    ''' Cluster Exception Class '''
+
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return 'ERROR: Cluster Error - %s' % (self.value)

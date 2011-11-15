@@ -1,4 +1,4 @@
-#
+
 #   Copyright [2011] [Patrick Ancillotti]
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
 import requests
 import anyjson as json
 import urllib2
-import sys
 
 from exceptions import ActionIndexError
 
@@ -140,6 +139,5 @@ def index_status(host, port, indexname, extended):
                         (shard_data[u'docs'][u'max_doc'])
                 print '\t\t\t Number Of Docs (Deleted): %s' % \
                         (shard_data[u'docs'][u'deleted_docs'])
-
     except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionIndexError('Error Fetching Index Status - %s' % (e))

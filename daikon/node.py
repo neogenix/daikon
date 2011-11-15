@@ -16,7 +16,6 @@
 
 import requests
 import anyjson as json
-import sys
 import urllib2
 
 from exceptions import ActionNodeError

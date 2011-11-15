@@ -21,7 +21,10 @@ import cluster
 import node
 import argparse
 
-from exceptions import ConfigError, ActionIndexError, ActionNodeError
+from exceptions import ConfigError
+from exceptions import ActionIndexError
+from exceptions import ActionNodeError
+from exceptions import ActionClusterError
 from config import configuration
 
 VERSION = __import__('daikon').__version__
@@ -207,10 +210,7 @@ def main():
     except ConfigError as error:
         print error
         return 1
-    except ActionIndexError as error:
-        print error
-        return 1
-    except ActionNodeError as error:
+    except (ActionIndexError, ActionNodeError, ActionClusterError) as error:
         print error
         return 1
 
