@@ -35,7 +35,7 @@ class ConfigError(DaikonError):
         return 'ERROR: Configuration Error - %s' % (self.value)
 
 
-class IndexError(DaikonError):
+class ActionIndexError(DaikonError):
     ''' Index Exception Class '''
 
     def __init__(self, value):

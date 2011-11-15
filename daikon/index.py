@@ -16,7 +16,10 @@
 
 import requests
 import anyjson as json
+import urllib2
 import sys
+
+from exceptions import ActionIndexError
 
 
 def index_create(host, port, indexname, shards, replicas):
@@ -26,10 +29,9 @@ def index_create(host, port, indexname, shards, replicas):
         request_url = 'http://%s:%s/%s' % (host, port, indexname)
         request = requests.post(request_url, data=request_data)
         request.raise_for_status()
-    except requests.RequestException, e:
-        raise IndexError('Error Creating Index' + str(e))
-    else:
         print 'SUCCESS: Creating Index : "%s"' % (indexname)
+    except (requests.RequestException, urllib2.HTTPError), e:
+        raise ActionIndexError('Error Creating Index' + str(e))
 
 
 def index_delete(host, port, indexname):

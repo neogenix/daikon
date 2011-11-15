@@ -135,8 +135,8 @@ class configuration:
             request_url = 'http://%s:%s' % (self._host, self._port)
             request = requests.get(request_url)
             request.raise_for_status()
+            self._es_version = json.loads(request.content)[u'version'][u'number']
+            return self._es_version
+
         except requests.RequestException, e:
             raise ConfigError('Error fetching version - ' + str(e))
-
-        self._es_version = json.loads(request.content)[u'version'][u'number']
-        return self._es_version

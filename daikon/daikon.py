@@ -21,8 +21,8 @@ import cluster
 import node
 import argparse
 
+from exceptions import DaikonError, ConfigError, ActionIndexError
 from config import configuration
-from exceptions import ConfigError
 
 VERSION = __import__('daikon').__version__
 
@@ -169,6 +169,12 @@ def main():
         config.config_setup()
         config.es_version()
     except ConfigError as error:
+        print error
+        return 1
+    except ActionIndexError as error:
+        print error
+        return 1
+    except DaikonError as error:
         print error
         return 1
 
