@@ -25,16 +25,9 @@ def index_create(host, port, indexname, shards, replicas):
                 "number_of_replicas" : %s } }') % (shards, replicas)
         request_url = 'http://%s:%s/%s' % (host, port, indexname)
         request = requests.post(request_url, data=request_data)
-
-        if request.error is not None:
-            print 'ERROR: Creating Index : "%s" - %s' % \
-                    (indexname, request.error)
-            sys.exit(1)
-        else:
-            request.raise_for_status()
+        request.raise_for_status()
     except requests.RequestException, e:
-        print 'ERROR: Creating Index : "%s" - %s' % (indexname, e)
-        sys.exit(1)
+        raise IndexError('Error Creating Index' + str(e))
     else:
         print 'SUCCESS: Creating Index : "%s"' % (indexname)
 
