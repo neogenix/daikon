@@ -21,7 +21,7 @@ import cluster
 import node
 import argparse
 
-from exceptions import DaikonError, ConfigError, ActionIndexError
+from exceptions import ConfigError, ActionIndexError
 from config import configuration
 
 VERSION = __import__('daikon').__version__
@@ -167,7 +167,6 @@ def main():
     try:
         config = configuration(args)
         config.config_setup()
-        config.es_version()
 
         if hasattr(args, 'subparser_index_name'):
             if args.subparser_index_name == 'list':
@@ -209,9 +208,6 @@ def main():
         print error
         return 1
     except ActionIndexError as error:
-        print error
-        return 1
-    except DaikonError as error:
         print error
         return 1
 
