@@ -99,6 +99,8 @@ def main():
     subparser_index_status.add_argument('--host')
     subparser_index_status.add_argument('--port')
     subparser_index_status.add_argument('--extended', action='store_true')
+    subparser_index_status.add_argument('--display', choices=['extended',
+            'regular'])
 
     # index list
 
@@ -189,7 +191,8 @@ def main():
                         args.subparser_index_close_indexname)
             if args.subparser_index_name == 'status':
                 index.index_status(config.host(), config.port(),
-                        args.subparser_index_status_indexname, args.extended)
+                        args.subparser_index_status_indexname, args.extended,
+                        args.display)
         elif hasattr(args, 'subparser_cluster_name'):
             if args.subparser_cluster_name == 'status':
                 cluster.cluster_status(config.cluster(), config.host(),

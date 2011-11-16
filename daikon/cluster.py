@@ -33,43 +33,43 @@ def cluster_status(cluster, host, port, extended):
         request_state.raise_for_status()
 
         print 'SUCCESS: Fetching Cluster Status : "%s"\n' % (cluster)
-        data_result_state = json.loads(request_state.content)
-        data_result_health = json.loads(request_health.content)[u'indices']
-        master_node = data_result_state[u'master_node']
+        result_state = json.loads(request_state.content)
+        result_health = json.loads(request_health.content)[u'indices']
+        master_node = result_state[u'master_node']
+        master_node_state = result_state[u'nodes'][master_node]
 
         print '\t Information:'
-        print '\t\t Cluster Name: %s' % (data_result_state[u'cluster_name'])
-        print '\t\t Master Node: %s' % (data_result_state[u'master_node'])
+        print '\t\t Cluster Name: %s' % (result_state[u'cluster_name'])
+        print '\t\t Master Node: %s' % (result_state[u'master_node'])
         if extended:
-            print '\t\t\t Name: %s' % \
-                    (data_result_state[u'nodes'][master_node][u'name'])
+            print '\t\t\t Name: %s' % (master_node_state[u'name'])
             print '\t\t\t Transport Address: %s' % \
-                    (data_result_state[u'nodes'][master_node][u'transport_address'])
+                    (master_node_state[u'transport_address'])
 
         print '\t Indices:'
-        for index in data_result_state[u'metadata'][u'indices']:
+        for index in result_state[u'metadata'][u'indices']:
             print '\t\t Name: %s' % (index)
             if extended:
-                print '\t\t\t State: %s' % \
-                        (data_result_state[u'metadata'][u'indices'][index][u'state'])
+                index_result = result_state[u'metadata'][u'indices'][index]
+                print '\t\t\t State: %s' % (index_result[u'state'])
                 print '\t\t\t Replicas: %s' % \
-                        (data_result_state[u'metadata'][u'indices'][index][u'settings'][u'index.number_of_replicas'])
+                        (index_result[u'settings'][u'index.number_of_replicas'])
                 print '\t\t\t Shards: %s' % \
-                        (data_result_state[u'metadata'][u'indices'][index][u'settings'][u'index.number_of_shards'])
-                if data_result_state[u'metadata'][u'indices'][index][u'state'] == 'close':
+                        (index_result[u'settings'][u'index.number_of_shards'])
+                if index_result[u'state'] == 'close':
                     print '\t\t\t Status: CLOSED'
                 else:
                     print '\t\t\t Status: %s' % \
-                            (data_result_health[index][u'status'])
+                            (result_health[index][u'status'])
 
         print '\t Nodes:'
-        for node in data_result_state[u'nodes']:
+        for node in result_state[u'nodes']:
             print '\t\t Node: %s' % (node)
             if extended:
                 print '\t\t\t Name: %s' % \
-                        (data_result_state[u'nodes'][node][u'name'])
+                        (result_state[u'nodes'][node][u'name'])
                 print '\t\t\t Transport Address: %s' % \
-                        (data_result_state[u'nodes'][node][u'transport_address'])
+                        (result_state[u'nodes'][node][u'transport_address'])
 
     except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionClusterError('Error Fetching Cluster Status - %s' % (e))

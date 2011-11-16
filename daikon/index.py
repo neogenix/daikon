@@ -1,4 +1,4 @@
-
+#
 #   Copyright [2011] [Patrick Ancillotti]
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,11 +23,11 @@ from exceptions import ActionIndexError
 
 def index_create(host, port, indexname, shards, replicas):
     try:
-        request_data = json.dumps('{"settings" : { "number_of_shards" : %s, \
+        res_data = json.dumps('{"settings" : { "number_of_shards" : %s, \
                 "number_of_replicas" : %s } }') % (shards, replicas)
-        request_url = 'http://%s:%s/%s' % (host, port, indexname)
-        request = requests.post(request_url, data=request_data)
-        request.raise_for_status()
+        res_url = 'http://%s:%s/%s' % (host, port, indexname)
+        res = requests.post(res_url, data=res_data)
+        res.raise_for_status()
         print 'SUCCESS: Creating Index : "%s"' % (indexname)
     except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionIndexError('Error Creating Index - %s' % (e))
@@ -35,9 +35,9 @@ def index_create(host, port, indexname, shards, replicas):
 
 def index_delete(host, port, indexname):
     try:
-        request_url = 'http://%s:%s/%s' % (host, port, indexname)
-        request = requests.delete(request_url)
-        request.raise_for_status()
+        res_url = 'http://%s:%s/%s' % (host, port, indexname)
+        res = requests.delete(res_url)
+        res.raise_for_status()
         print 'SUCCESS: Deleting Index : "%s"' % (indexname)
     except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionIndexError('Error Deleting Index - %s' % (e))
@@ -45,42 +45,41 @@ def index_delete(host, port, indexname):
 
 def index_list(host, port, extended):
     try:
-        request_health_url = 'http://%s:%s/_cluster/health?level=indices' % \
+        res_health_url = 'http://%s:%s/_cluster/health?level=indices' % \
                 (host, port)
-        request_health = requests.get(request_health_url)
-        request_health.raise_for_status()
+        res_health = requests.get(res_health_url)
+        res_health.raise_for_status()
 
-        request_state_url = 'http://%s:%s/_cluster/state' % (host, port)
-        request_state = requests.get(request_state_url)
-        request_state.raise_for_status()
+        res_state_url = 'http://%s:%s/_cluster/state' % (host, port)
+        res_state = requests.get(res_state_url)
+        res_state.raise_for_status()
 
-        data_result_state = json.loads(request_state.content)[u'metadata'][u'indices']
-        data_result_health = json.loads(request_health.content)[u'indices']
+        result_state = json.loads(res_state.content)[u'metadata'][u'indices']
+        result_health = json.loads(res_health.content)[u'indices']
         print 'SUCCESS: Listing Indexes'
-        for index in data_result_state:
+        for index in result_state:
             print '\t Name: %s' % (index)
             if extended:
-                print '\t\t State: %s' % (data_result_state[index][u'state'])
-                if data_result_state[index][u'state'] == 'close':
+                print '\t\t State: %s' % (result_state[index][u'state'])
+                if result_state[index][u'state'] == 'close':
                     print '\t\t Status: CLOSED'
                 else:
                     print '\t\t Status: %s' % \
-                            (data_result_health[index][u'status'])
+                            (result_health[index][u'status'])
                 print '\t\t Number Of Shards: %s' % \
-                        (data_result_state[index][u'settings'][u'index.number_of_shards'])
+                        (result_state[index][u'settings'][u'index.number_of_shards'])
                 print '\t\t Number Of Replicas: %s' % \
-                        (data_result_state[index][u'settings'][u'index.number_of_replicas'])
+                        (result_state[index][u'settings'][u'index.number_of_replicas'])
 
-    except (request_health.RequestException, request_state.RequestException, \
-            urllib2.HTTPError), e:
+    except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionIndexError('Error Listing Indexes - %s' % (e))
 
 
 def index_open(host, port, indexname):
     try:
-        request_url = 'http://%s:%s/%s/_open' % (host, port, indexname)
-        request = requests.post(request_url)
-        request.raise_for_status()
+        res_url = 'http://%s:%s/%s/_open' % (host, port, indexname)
+        res = requests.post(res_url)
+        res.raise_for_status()
         print 'SUCCESS: Opening Index : "%s"' % (indexname)
     except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionIndexError('Error Opening Index - %s' % (e))
@@ -88,56 +87,78 @@ def index_open(host, port, indexname):
 
 def index_close(host, port, indexname):
     try:
-        request_url = 'http://%s:%s/%s/_close' % (host, port, indexname)
-        request = requests.post(request_url)
-        request.raise_for_status()
+        res_url = 'http://%s:%s/%s/_close' % (host, port, indexname)
+        res = requests.post(res_url)
+        res.raise_for_status()
         print 'SUCCESS: Closing Index : "%s"' % (indexname)
     except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionIndexError('Error Closing Index - %s' % (e))
 
 
-def index_status(host, port, indexname, extended):
+def index_status(host, port, indexname, extended, display):
     try:
-        request_url = 'http://%s:%s/%s/_status' % (host, port, indexname)
-        request = requests.get(request_url)
-        request.raise_for_status()
+        res_url = 'http://%s:%s/%s/_status' % (host, port, indexname)
+        res = requests.get(res_url)
+        res.raise_for_status()
         print 'SUCCESS: Fetching Index Status : "%s"' % (indexname)
+        result = json.loads(res.content)[u'indices'][indexname]
 
-        request_result = json.loads(request.content)[u'indices'][indexname]
-        print '\t Size Status:'
-        print '\t\t Primary Size: %s' % \
-                (request_result[u'index'][u'primary_size'])
         if extended:
-            print '\t\t Total Size: %s' % \
-                (request_result[u'index'][u'size'])
+            display = 'extended'
 
-        print '\t Document Status:'
-        print '\t\t Number Of Docs (Current): %s' % \
-            (request_result[u'docs'][u'num_docs'])
-        if extended:
-            print '\t\t Number Of Docs (Max): %s' % \
-                    (request_result[u'docs'][u'max_doc'])
-            print '\t\t Number Of Docs (Deleted): %s' % \
-                    (request_result[u'docs'][u'deleted_docs'])
+        var = {}
+        if display == 'extended':
+            content = ('\t Size Status:\n'
+                       '\t\t Primary Size: %(s_pri)s\n'
+                       '\t\t Total Size: %(s_total)s\n'
+                       '\t Document Status:\n'
+                       '\t\t Number Of Docs (Current): %(d_cur)s\n'
+                       '\t\t Number Of Docs (Max): %(d_max)s\n'
+                       '\t\t Number Of Docs (Deleted): %(d_del)s\n'
+                       '\t Merge Status:\n'
+                       '\t\t Total Merges: %(m_total)s\n'
+                       '\t\t Current Merges: %(m_cur)s\n')
 
-        print '\t Merge Status:'
-        print '\t\t Total Merges: %s' % (request_result[u'merges'][u'total'])
-        if extended:
-            print '\t\t Current Merges: %s' % \
-                    (request_result[u'merges'][u'current'])
-        if extended:
-            print '\n\t Shard Status:'
-            for shard in request_result[u'shards']:
-                print '\n\t\t Number: %s' % (shard)
+            var['s_pri'] = result[u'index'][u'primary_size']
+            var['s_total'] = result[u'index'][u'size']
+            var['d_cur'] = result[u'docs'][u'num_docs']
+            var['d_max'] = result[u'docs'][u'max_doc']
+            var['d_del'] = result[u'docs'][u'deleted_docs']
+            var['m_total'] = result[u'merges'][u'total']
+            var['m_cur'] = result[u'merges'][u'current']
+            print content % var
 
-                shard_data = request_result[u'shards'][shard][0]
-                print '\t\t\t State: %s' % (shard_data[u'routing'][u'state'])
-                print '\t\t\t Size: %s' % (shard_data[u'index'][u'size'])
-                print '\t\t\t Number Of Docs (Current): %s' % \
-                        (shard_data[u'docs'][u'num_docs'])
-                print '\t\t\t Number Of Docs (Max): %s' % \
-                        (shard_data[u'docs'][u'max_doc'])
-                print '\t\t\t Number Of Docs (Deleted): %s' % \
-                        (shard_data[u'docs'][u'deleted_docs'])
+            s_content = ('\t Shard Status:\n'
+                         '\t\t Number: %(number)s\n'
+                         '\t\t\t State: %(state)s\n'
+                         '\t\t\t Size: %(size)s\n'
+                         '\t\t\t Number Of Docs (Current): %(d_cur)s\n'
+                         '\t\t\t Number Of Docs (Max): %(d_max)s\n'
+                         '\t\t\t Number Of Docs (Deleted): %(d_del)s\n')
+
+            for s in result[u'shards']:
+                s_data = result[u'shards'][s][0]
+                var[s] = {}
+                var[s]['number'] = s
+                var[s]['state'] = s_data[u'routing'][u'state']
+                var[s]['size'] = s_data[u'index'][u'size']
+                var[s]['d_cur'] = s_data[u'docs'][u'num_docs']
+                var[s]['d_max'] = s_data[u'docs'][u'max_doc']
+                var[s]['d_del'] = s_data[u'docs'][u'deleted_docs']
+                print s_content % var[s]
+
+        else:
+            content = ('\t Size Status:\n'
+                       '\t\t Primary Size: %(s_pri)s\n'
+                       '\t Document Status:\n'
+                       '\t\t Number Of Docs (Current): %(d_cur)s\n'
+                       '\t Merge Status:\n'
+                       '\t\t Total Merges: %(m_total)s\n')
+
+            var['s_pri'] = result[u'index'][u'primary_size']
+            var['d_cur'] = result[u'docs'][u'num_docs']
+            var['m_total'] = result[u'merges'][u'total']
+            print content % var
+
     except (requests.RequestException, urllib2.HTTPError), e:
         raise ActionIndexError('Error Fetching Index Status - %s' % (e))

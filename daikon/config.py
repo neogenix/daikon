@@ -31,7 +31,7 @@ class configuration:
         self._port = None
         self._replicas = None
         self._shards = None
-        self._es_version = None
+        self._version = None
 
     def config_setup(self):
         ''' Setup configuration, and read config files '''
@@ -52,7 +52,8 @@ class configuration:
         if self._cluster is not None:
             return self._cluster
 
-        if hasattr(self.arguments, 'cluster') and self.arguments.cluster is not None:
+        if hasattr(self.arguments, 'cluster') and \
+                self.arguments.cluster is not None:
             self._cluster = self.arguments.cluster
         else:
             self._cluster = 'default'
@@ -119,11 +120,11 @@ class configuration:
 
         return self._shards
 
-    def es_version(self):
+    def version(self):
         ''' Get ElasticSearch Version '''
 
-        if self._es_version is not None:
-            return self._es_version
+        if self._version is not None:
+            return self._version
 
         if self._host is None:
             self._host = self.host()
@@ -135,8 +136,7 @@ class configuration:
             request_url = 'http://%s:%s' % (self._host, self._port)
             request = requests.get(request_url)
             request.raise_for_status()
-            self._es_version = json.loads(request.content)[u'version'][u'number']
-            return self._es_version
-
+            self._version = json.loads(request.content)[u'version'][u'number']
+            return self._version
         except requests.RequestException, e:
             raise ConfigError('Error fetching version - ' + str(e))
