@@ -14,22 +14,40 @@
 #   limitations under the License.
 #
 
-#!/usr/bin/env python
-
-import cluster
-import node
 import argparse
+import os
+import types
 
-from exceptions import ConfigError
-from exceptions import ActionIndexError
-from exceptions import ActionNodeError
-from exceptions import ActionClusterError
-from config import Config
-from index import Index
-from node import Node
-from cluster import Cluster
+
+from daikon import managers
+from daikon import config
+from daikon import connection
+from daikon import exceptions
+
 
 VERSION = __import__('daikon').__version__
+
+
+def print_dict(output, level=0):
+    for key, value in output.iteritems():
+        if isinstance(value, types.DictType):
+            print_output(key, level=level)
+            print_dict(value, level=level + 1)
+        else:
+            print_output('%s: %s' % (key, value), level=level)
+
+
+def print_output(output, vars=None, level=0):
+    if isinstance(output, types.ListType):
+        output = os.linesep.join(output)
+    elif isinstance(output, types.DictType):
+        return print_dict(output, level=level)
+    if vars is not None:
+        output = output % vars
+    prefix = ''
+    if level > 0:
+        prefix = '\t' * level
+    print prefix + output
 
 
 def main():
@@ -172,43 +190,60 @@ def main():
     args = parser_main.parse_args()
 
     try:
-        config = Config(args)
-        config.config_setup()
+        conf = config.Configuration(args)
+        conf.setup()
+
+        conn = connection.Connection(conf.host(), conf.port())
 
         if hasattr(args, 'subparser_index_name'):
-            index = Index(args)
-            if args.subparser_index_name == 'list':
-                index.index_setup(config.host(), config.port())
-                index.index_list(config.host(), config.port(), args.extended)
-            if args.subparser_index_name == 'status':
-                index.index_setup(config.host(), config.port())
-                index.index_status(config.host(), config.port(),
-                        args.subparser_index_status_indexname, args.extended)
-            if args.subparser_index_name == 'create':
-                index.index_create(config.host(), config.port(),
-                        args.subarser_index_create_indexname, config.shards(),
-                        config.replicas())
-            if args.subparser_index_name == 'delete':
-                index.index_delete(config.host(), config.port(),
-                        args.subparser_index_delete_indexname)
-            if args.subparser_index_name == 'open':
-                index.index_open(config.host(), config.port(),
-                        args.subparser_index_open_indexname)
-            if args.subparser_index_name == 'close':
-                index.index_close(config.host(), config.port(),
-                        args.subparser_index_close_indexname)
+            action = args.subparser_index_name
+            index = managers.Index(conn)
+
+            if action == 'list':
+                output = index.list(args.extended)
+                print_output('SUCCESS: Listing Indexes')
+                print_output(output, level=1)
+
+            if action == 'status':
+                index_name = args.subparser_index_status_indexname
+                output = index.status(index_name, args.extended)
+                print_output(output)
+
+            if action == 'create':
+                index_name = args.subparser_index_create_indexname
+                shards = conf.shards()
+                replicas = conf.replicas()
+                output = index.create(index_name, shards, replicas)
+                print_output('SUCCESS: Creating Index : "%s"',  output)
+
+            if action == 'delete':
+                index_name = args.subparser_index_delete_indexname
+                output = index.delete(index_name)
+                print_output('SUCCESS: Deleting Index : "%s"', output)
+
+            if action == 'open':
+                index_name = args.subparser_index_open_indexname
+                output = index.open(index_name)
+                print_output('SUCCESS: Opening Index : "%s"', output)
+
+            if action == 'close':
+                index_name = args.subparser_index_close_indexname
+                output = index.close(index_name)
+                print_output('SUCCESS: Closing Index : "%s"', output)
+
         elif hasattr(args, 'subparser_node_name'):
-            node = Node(args)
+            node = managers.Node(args)
             if args.subparser_node_name == 'shutdown':
                 node.node_shutdown(args.subparser_node_shutdown_hostname,
-                        config.port(), args.delay)
+                        conf.port(), args.delay)
             if args.subparser_node_name == 'status':
                 node.node_status(args.subparser_node_status_hostname,
-                        config.port(), args.extended)
+                        conf.port(), args.extended)
             if args.subparser_node_name == 'list':
                 node.node_list(config.host(), config.port(), args.extended)
+
         elif hasattr(args, 'subparser_cluster_name'):
-            cluster = Cluster(args)
+            cluster = managers.Cluster(args)
             if args.subparser_cluster_name == 'status':
                 cluster.cluster_status(config.cluster(), config.host(),
                         config.port(), args.extended)
@@ -216,10 +251,12 @@ def main():
                 cluster.cluster_shutdown(config.cluster(), config.host(),
                         config.port())
 
-    except ConfigError as error:
+    except exceptions.ConfigError as error:
         print error
         return 1
-    except (ActionIndexError, ActionNodeError, ActionClusterError) as error:
+    except (exceptions.ActionIndexError,
+            exceptions.ActionNodeError,
+            exceptions.ActionClusterError) as error:
         print error
         return 1
 

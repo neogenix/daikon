@@ -18,7 +18,7 @@ import requests
 import anyjson as json
 import urllib2
 
-from exceptions import ActionClusterError
+from daikon import exceptions
 
 
 class Cluster:
@@ -77,7 +77,8 @@ class Cluster:
                             (result_state[u'nodes'][node][u'transport_address'])
 
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionClusterError('Error Fetching Cluster Status - %s' % (e))
+            msg = 'Error Fetching Cluster Status - %s' % (e)
+            raise exceptions.ActionClusterError(msg)
 
     def cluster_shutdown(self, cluster, host, port):
         try:
@@ -86,4 +87,5 @@ class Cluster:
             request.raise_for_status()
             print 'SUCCESS: Shutting Down Cluster : "%s"' % (cluster)
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionClusterError('Shutting Down Cluster - %s' % (e))
+            msg = 'Shutting Down Cluster - %s' % (e)
+            raise exceptions.ActionClusterError(msg)
