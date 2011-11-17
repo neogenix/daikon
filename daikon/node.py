@@ -27,75 +27,97 @@ class Node:
 
     def node_status(self, host, port, extended):
         try:
-            request_url = 'http://%s:%s/_cluster/nodes/_local/stats' % (host, port)
-            request = requests.get(request_url)
-            request.raise_for_status()
-            print 'SUCCESS: Fetching Index Status : "%s"\n' % (host)
+            req_url = 'http://%s:%s/_cluster/nodes/_local/stats' \
+                    % (host, port)
+            req = requests.get(req_url)
+            req.raise_for_status()
+            res = json.loads(req.content)
+            print 'SUCCESS: Fetching Index Status : "%s"' % (host)
+            var = {}
 
-            data_result = json.loads(request.content)
-            for node in data_result[u'nodes']:
-                print '\t Status:'
-                print '\t\t Node Status:'
-                print '\t\t\t Cluster: %s' % (data_result[u'cluster_name'])
-                print '\t\t\t ID: %s' % (node)
-                if extended:
-                    print '\t\t\t Name: %s' % \
-                            (data_result[u'nodes'][node][u'name'])
+            for node in res[u'nodes']:
+                content = ('\t Status:\n'
+                           '\t\t Node Status:\n'
+                           '\t\t\t Cluster: %(cluster)s\n'
+                           '\t\t\t ID: %(id)s')
+                var['cluster'] = res[u'cluster_name']
+                var['id'] = node
+                print content % var
+                res_n = res[u'nodes'][node]
 
-                print '\t\t Index Status:'
-                print '\t\t\t Size: %s' % \
-                        (data_result[u'nodes'][node][u'indices'][u'store'][u'size'])
-                if extended:
-                    print '\t\t\t Get (Total): %s' % \
-                            (data_result[u'nodes'][node][u'indices'][u'get'][u'total'])
-                    print '\t\t\t Get (Time): %s' % \
-                            data_result[u'nodes'][node][u'indices'][u'get'][u'time']
-                    print '\t\t\t Searches (Total): %s' % \
-                            (data_result[u'nodes'][node][u'indices'][u'search'][u'query_total'])
-                    print '\t\t\t Searches (Time): %s' % \
-                            (data_result[u'nodes'][node][u'indices'][u'search'][u'query_time'])
+                if not extended:
+                    content = ('\t\t Index Status:\n'
+                               '\t\t\t Size: %(size)s')
+                    var['size'] = res_n[u'indices'][u'store'][u'size']
+                    print content % var
 
-                if extended:
-                    print '\t\t OS Status:'
-                    print '\t\t\t Uptime: %s' % \
-                            (data_result[u'nodes'][node][u'os'][u'uptime'])
-                    print '\t\t\t Load Average: %s' % \
-                            (data_result[u'nodes'][node][u'os'][u'load_average'])
-                    print '\t\t\t Memory Status:'
-                    print '\t\t\t\t Memory (Free): %s' % \
-                            (data_result[u'nodes'][node][u'os'][u'mem'][u'free'])
-                    print '\t\t\t\t Memory (Used): %s' % \
-                            (data_result[u'nodes'][node][u'os'][u'mem'][u'used'])
-                    print '\t\t\t Swap Status:'
-                    print '\t\t\t\t Swap (Free): %s' % \
-                            (data_result[u'nodes'][node][u'os'][u'swap'][u'free'])
-                    print '\t\t\t\t Swap (Used): %s' % \
-                            (data_result[u'nodes'][node][u'os'][u'swap'][u'used'])
+                else:
+                    content = ('\t\t\t Name: %(name)s\n'
+                               '\t\t Index Status:\n'
+                               '\t\t\t Size: %(size)s\n'
+                               '\t\t\t Get (Total): %(get_total)s\n'
+                               '\t\t\t Get (Time): %(get_time)s\n'
+                               '\t\t\t Searches (Total): %(search_total)s\n'
+                               '\t\t\t Searches (Time): %(search_time)s\n'
+                               '\t\t OS Status:\n'
+                               '\t\t\t Uptime: %(uptime)s\n'
+                               '\t\t\t Load Average: %(load_ave)s\n'
+                               '\t\t\t Memory Status:\n'
+                               '\t\t\t\t Memory (Free): %(mem_free)s\n'
+                               '\t\t\t\t Memory (Used): %(mem_used)s\n'
+                               '\t\t\t Swap Status:\n'
+                               '\t\t\t\t Swap (Free): %(swap_free)s\n'
+                               '\t\t\t\t Swap (Used): %(swap_used)s')
+                    var['name'] = res_n[u'name']
+                    var['size'] = res_n[u'indices'][u'store'][u'size']
+                    var['get_total'] = res_n[u'indices'][u'get'][u'total']
+                    var['get_time'] = res_n[u'indices'][u'get'][u'time']
+                    var['search_total'] = res_n[u'indices'][u'search'][u'query_total']
+                    var['search_time'] = res_n[u'indices'][u'search'][u'query_time']
+                    var['uptime'] = res_n[u'os'][u'uptime']
+                    var['load_ave'] = res_n[u'os'][u'load_average']
+                    var['mem_free'] = res_n[u'os'][u'mem'][u'free']
+                    var['mem_used'] = res_n[u'os'][u'mem'][u'used']
+                    var['swap_free'] = res_n[u'os'][u'swap'][u'free']
+                    var['swap_used'] = res_n[u'os'][u'swap'][u'used']
+                    print content % var
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionNodeError('Error Fetching Node Status - %s' % (e))
 
     def node_list(self, host, port, extended):
-        try:
-            request_url = 'http://%s:%s/_cluster/state' % (host, port)
-            request = requests.get(request_url)
-            print 'SUCCESS: Fetching Node List :\n'
+        ''' List Nodes Here '''
 
-            data_result = json.loads(request.content)[u'nodes']
-            print '\t Nodes:'
-            for node in data_result:
-                print '\t\t Node:', node
+        try:
+            req_url = 'http://%s:%s/_cluster/state' % (host, port)
+            req = requests.get(req_url)
+            req.raise_for_status()
+            res = json.loads(req.content)[u'nodes']
+            print 'SUCCESS: Fetching Node List :\n'
+            var = {}
+
+            for node in res:
+                print '\t\t Node: %s' % (node)
+
                 if extended:
-                    print '\t\t\t Name:', data_result[node][u'name']
-                    print '\t\t\t Transport Address:', data_result[node][u'transport_address']
+                    var['name'] = res[node][u'name']
+                    var['t_address'] = res[node][u'transport_address']
+                    content = ('\t\t\t Name: %(name)s\n'
+                               '\t\t\t Transport Address: %(t_address)s')
+                    print content % var
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionNodeError('Error Fetching Node List - %s' % (e))
 
     def node_shutdown(self, host, port, delay):
+        ''' Shutdown a Node Here '''
+
         try:
-            request_url = 'http://%s:%s/_cluster/nodes/_local/_shutdown?delay=%ss' \
-                    % (host, port, delay)
-            request = requests.post(request_url)
-            request.raise_for_status()
-            print 'SUCCESS: Shutting Down Node : "' + host + '"'
+            req_url = ('http://%s:%s/_cluster/nodes/_local/'
+                       '_shutdown?delay=%ss') % (host, port, delay)
+            req = requests.post(req_url)
+            req.raise_for_status()
+            print 'SUCCESS: Shutting Down Node : "%s"' % (host)
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionNodeError('Error Shutting Down Node - %s' % (e))
