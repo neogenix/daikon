@@ -20,7 +20,8 @@ import urllib2
 
 from exceptions import ActionIndexError
 
-class indexing:
+
+class Indexing:
 
     def __init__(self, arguments):
         self.arguments = arguments
@@ -30,21 +31,20 @@ class indexing:
     def index_setup(self, host, port):
         try:
             if self._health is None:
-                health_url = 'http://%s:%s/_cluster/health?level=indices' \
+                h_url = 'http://%s:%s/_cluster/health?level=indices' \
                         % (host, port)
-                health = requests.get(health_url)
-                health.raise_for_status()
-                self._health = json.loads(health.content)[u'indices']
+                h = requests.get(h_url)
+                h.raise_for_status()
+                self._health = json.loads(h.content)[u'indices']
 
             if self._state is None:
-                state_url = 'http://%s:%s/_cluster/state' % (host, port)
-                state = requests.get(state_url)
-                state.raise_for_status()
-                self._state = json.loads(state.content)[u'metadata'][u'indices']
+                s_url = 'http://%s:%s/_cluster/state' % (host, port)
+                s = requests.get(s_url)
+                s.raise_for_status()
+                self._state = json.loads(s.content)[u'metadata'][u'indices']
 
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Setting Up Indexes - %s' % (e))
-
 
     def index_create(self, host, port, indexname, shards, replicas):
         try:
@@ -57,7 +57,6 @@ class indexing:
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Creating Index - %s' % (e))
 
-
     def index_delete(self, host, port, indexname):
         try:
             res_url = 'http://%s:%s/%s' % (host, port, indexname)
@@ -66,7 +65,6 @@ class indexing:
             print 'SUCCESS: Deleting Index : "%s"' % (indexname)
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Deleting Index - %s' % (e))
-
 
     def index_open(self, host, port, indexname):
         try:
@@ -77,7 +75,6 @@ class indexing:
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Opening Index - %s' % (e))
 
-
     def index_close(self, host, port, indexname):
         try:
             res_url = 'http://%s:%s/%s/_close' % (host, port, indexname)
@@ -86,7 +83,6 @@ class indexing:
             print 'SUCCESS: Closing Index : "%s"' % (indexname)
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Closing Index - %s' % (e))
-
 
     def index_status(self, host, port, indexname, extended):
         try:
@@ -150,7 +146,6 @@ class indexing:
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Fetching Index Status - %s' % (e))
 
-
     def index_list(self, host, port, extended):
         try:
             print 'SUCCESS: Listing Indexes'
@@ -166,13 +161,15 @@ class indexing:
 
                     var['state'] = self._state[index][u'state']
                     var['status'] = status
-                    var['shards'] = self._state[index][u'settings'][u'index.number_of_shards']
-                    var['replicas'] = self._state[index][u'settings'][u'index.number_of_replicas']
+
+                    settings = self._state[index][u'settings']
+                    var['shards'] = settings[u'index.number_of_shards']
+                    var['replicas'] = settings[u'index.number_of_replicas']
+
                     content = ('\t\t State: %(state)s\n'
                                '\t\t Status: %(status)s\n'
                                '\t\t Number Of Shards: %(shards)s\n'
                                '\t\t Number Of Replicas: %(replicas)s')
                     print content % var
-
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Listing Indexes - %s' % (e))
