@@ -50,3 +50,4 @@ class Connection(object):
         path = '/_cluster/state'
         state = json.loads(self.get(path).content)
         self._state = state[u'metadata'][u'indices']
+        return self._state
