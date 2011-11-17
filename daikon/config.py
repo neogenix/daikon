@@ -22,7 +22,7 @@ import anyjson as json
 from exceptions import ConfigError
 
 
-class Config:
+class Configuration(object):
 
     def __init__(self, arguments):
         self.arguments = arguments
@@ -33,7 +33,7 @@ class Config:
         self._shards = None
         self._version = None
 
-    def config_setup(self):
+    def setup(self):
         ''' Setup configuration, and read config files '''
 
         self.config_parser = ConfigParser.ConfigParser()
