@@ -19,7 +19,7 @@ import ConfigParser
 import os.path
 import anyjson as json
 
-from exceptions import ConfigError
+from daikon import exceptions
 
 
 class Configuration(object):
@@ -40,9 +40,11 @@ class Configuration(object):
 
         if not self.config_parser.read(['/etc/daikon/daikon.conf',
                 os.path.expanduser('~/.daikon.conf'), 'daikon.conf']):
-            raise ConfigError('No config file found!\n')
+            msg = 'No config file found!'
+            raise exceptions.ConfigError(msg)
         elif not self.config_parser.has_section(self.cluster()):
-            raise ConfigError('No cluster section defined for this cluster!\n')
+            msg = 'No cluster section defined for this cluster!'
+            raise exceptions.ConfigError(msg)
         else:
             return self.config_parser
 
@@ -67,7 +69,7 @@ class Configuration(object):
             return self._host
 
         if not self.config_parser.get(self.cluster(), 'host'):
-            raise ConfigError('No default host defined!\n')
+            raise exceptions.ConfigError('No default host defined!')
         elif hasattr(self.arguments, 'host') and self.arguments.host:
             self._hsot = self.arguments.host
         else:
@@ -82,7 +84,7 @@ class Configuration(object):
             return self._port
 
         if not self.config_parser.get(self.cluster(), 'port'):
-            raise ConfigError('No default port defined!\n')
+            raise exceptions.ConfigError('No default port defined!')
         elif hasattr(self.arguments, 'port') and self.arguments.port:
             self._port = self.arguments.port
         else:
@@ -97,7 +99,7 @@ class Configuration(object):
             return self._replicas
 
         if not self.config_parser.get(self.cluster(), 'replicas'):
-            raise ConfigError('No default replicas defined!\n')
+            raise exceptions.ConfigError('No default replicas defined!')
         elif hasattr(self.arguments, 'replicas') and self.arguments.replicas:
             self._replicas = self.arguments.replicas
         else:
@@ -112,7 +114,7 @@ class Configuration(object):
             return self._shards
 
         if not self.config_parser.get(self.cluster(), 'shards'):
-            raise ConfigError('No default shards defined!\n')
+            raise exceptions.ConfigError('No default shards defined!')
         elif hasattr(self.arguments, 'shards') and self.arguments.shards:
             self._shards = self.arguments.shards
         else:
@@ -139,4 +141,4 @@ class Configuration(object):
             self._version = json.loads(request.content)[u'version'][u'number']
             return self._version
         except requests.RequestException, e:
-            raise ConfigError('Error fetching version - ' + str(e))
+            raise exceptions.ConfigError('Error fetching version - ' + str(e))
