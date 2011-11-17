@@ -18,178 +18,117 @@ import requests
 import anyjson as json
 import urllib2
 
-from exceptions import ActionIndexError
+from daikon import exceptions
 
 
-class Index:
+class Index(object):
+    def __init__(self, connection):
+        self._connection = connection
 
-    def __init__(self, arguments):
-        self.arguments = arguments
-        self._state = None
-        self._health = None
-
-    def index_setup(self, host, port):
-        ''' Setup Health and Status info fetches '''
-
+    def create(self, index_name, shards, replicas):
         try:
-            if self._health is None:
-                h_url = 'http://%s:%s/_cluster/health?level=indices' \
-                        % (host, port)
-                h = requests.get(h_url)
-                h.raise_for_status()
-                self._health = json.loads(h.content)[u'indices']
-
-            if self._state is None:
-                s_url = 'http://%s:%s/_cluster/state' % (host, port)
-                s = requests.get(s_url)
-                s.raise_for_status()
-                self._state = json.loads(s.content)[u'metadata'][u'indices']
-
+            data = {"settings" : {"number_of_shards" : shards,
+                                  "number_of_replicas" : replicas}}
+            self._connection.post(index_name, data)
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionIndexError('Error Setting Up Indexes - %s' % (e))
+            msg = 'Error Creating Index - %s' % (e)
+            raise exceptions.ActionIndexError(msg)
+        return index_name
 
-    def index_create(self, host, port, indexname, shards, replicas):
-        ''' Creat Indexes Here '''
-
+    def delete(self, index_name):
         try:
-            res_data = json.dumps('{"settings" : { "number_of_shards" : %s, \
-                    "number_of_replicas" : %s } }') % (shards, replicas)
-            res_url = 'http://%s:%s/%s' % (host, port, indexname)
-            res = requests.post(res_url, data=res_data)
-            res.raise_for_status()
-            print 'SUCCESS: Creating Index : "%s"' % (indexname)
-
+            self._connection.delete(index_name)
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionIndexError('Error Creating Index - %s' % (e))
+            msg = 'Error Deleting Index - %s' % (e)
+            raise exceptions.ActionIndexError(msg)
+        return index_name
 
-    def index_delete(self, host, port, indexname):
-        ''' Delete Indexes Here '''
-
+    def open(self, index_name):
         try:
-            res_url = 'http://%s:%s/%s' % (host, port, indexname)
-            res = requests.delete(res_url)
-            res.raise_for_status()
-            print 'SUCCESS: Deleting Index : "%s"' % (indexname)
-
+            url = '%s/_open' % index_name
+            self._connection.post(url)
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionIndexError('Error Deleting Index - %s' % (e))
+            msg = 'Error Opening Index - %s' % (e)
+            raise exceptions.ActionIndexError(msg)
+        return index_name
 
-    def index_open(self, host, port, indexname):
-        ''' Open Indexes Here '''
-
+    def close(self, index_name):
         try:
-            res_url = 'http://%s:%s/%s/_open' % (host, port, indexname)
-            res = requests.post(res_url)
-            res.raise_for_status()
-            print 'SUCCESS: Opening Index : "%s"' % (indexname)
-
+            url = '%s/_close' % index_name
+            self._connection.post(url)
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionIndexError('Error Opening Index - %s' % (e))
+            msg = 'Error Closing Index - %s' % (e)
+            raise exceptions.ActionIndexError(msg)
+        return index_name
 
-    def index_close(self, host, port, indexname):
-        ''' Close Indexes Here '''
+    def status(self, index_name, extended=False):
         try:
-            res_url = 'http://%s:%s/%s/_close' % (host, port, indexname)
-            res = requests.post(res_url)
-            res.raise_for_status()
-            print 'SUCCESS: Closing Index : "%s"' % (indexname)
-
+            url = '%s/_status' % index_name
+            res = json.loads(self._connection.get(url).content)
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionIndexError('Error Closing Index - %s' % (e))
+            msg = 'Error Fetching Index Status - %s' % (e)
+            raise exceptions.ActionIndexError(msg)
 
-    def index_status(self, host, port, indexname, extended):
-        ''' Fetch Info and Status For an Index Here '''
+        status = res['indicies'][index_name]
 
+        output = {}
+        size = {}
+        doc = {}
+        merge = {}
+
+        output['Name'] = index_name
+        output['Size Status'] = size
+        output['Document Status'] = doc
+        output['Merge Status'] = merge
+
+        size['Primary Size'] = status['index']['primary_size']
+        doc['Docs (Current)'] = status['docs']['num_docs']
+        merge['Total Merges'] = status['merges']['total']
+
+        if extended:
+            size['Total Size'] = status['index']['size']
+
+            doc['Docs (Max)'] = status['docs']['max_doc']
+            doc['Docs (Deleted)'] = status['docs']['deleted_docs']
+
+            merge['Current Merges'] = status['merges']['current']
+
+            shards = {}
+            for shard, value  in status['shards'].iteritems:
+                s_data = {}
+                s_data['State'] = value['routing']['state']
+                s_data['Size'] = value['index']['size']
+                s_data['Docs (Current)'] = value['docs']['num_docs']
+                s_data['Docs (Max)'] = value['docs']['max_doc']
+                s_data['Docs (Deleted)'] = value[u'docs']['deleted_docs']
+                shards[shard] = s_data
+
+            output['Shard Status'] = shards
+        return output
+
+
+    def list(self, extended=False):
         try:
-            req_url = 'http://%s:%s/%s/_status' % (host, port, indexname)
-            req = requests.get(req_url)
-            req.raise_for_status()
-            res = json.loads(req.content)[u'indices'][indexname]
-            var = {}
+            health = self._connection.health
+            state = self._connection.state
+        except (requests.RequestException, urllib2.HTTPError), e:
+            msg = 'Error Listing Indexes - %s' % (e)
+            raise exceptions.ActionIndexError(msg)
 
+        output = {}
+        for index in state:
+            out = {}
             if extended:
-                content = ('Name: %(name)s\n'
-                           '\t Size Status:\n'
-                           '\t\t Primary Size: %(s_pri)s\n'
-                           '\t\t Total Size: %(s_total)s\n'
-                           '\t Document Status:\n'
-                           '\t\t Number Of Docs (Current): %(d_cur)s\n'
-                           '\t\t Number Of Docs (Max): %(d_max)s\n'
-                           '\t\t Number Of Docs (Deleted): %(d_del)s\n'
-                           '\t Merge Status:\n'
-                           '\t\t Total Merges: %(m_total)s\n'
-                           '\t\t Current Merges: %(m_cur)s\n')
-                var['name'] = indexname
-                var['s_pri'] = res[u'index'][u'primary_size']
-                var['s_total'] = res[u'index'][u'size']
-                var['d_cur'] = res[u'docs'][u'num_docs']
-                var['d_max'] = res[u'docs'][u'max_doc']
-                var['d_del'] = res[u'docs'][u'deleted_docs']
-                var['m_total'] = res[u'merges'][u'total']
-                var['m_cur'] = res[u'merges'][u'current']
-                print content % var
-                s_content = ('\t Shard Status:\n'
-                             '\t\t Number: %(number)s\n'
-                             '\t\t\t State: %(state)s\n'
-                             '\t\t\t Size: %(size)s\n'
-                             '\t\t\t Number Of Docs (Current): %(d_cur)s\n'
-                             '\t\t\t Number Of Docs (Max): %(d_max)s\n'
-                             '\t\t\t Number Of Docs (Deleted): %(d_del)s')
+                out['state'] = state[index][u'state']
 
-                for s in res[u'shards']:
-                    s_data = res[u'shards'][s][0]
-                    var[s] = {}
-                    var[s]['number'] = s
-                    var[s]['state'] = s_data[u'routing'][u'state']
-                    var[s]['size'] = s_data[u'index'][u'size']
-                    var[s]['d_cur'] = s_data[u'docs'][u'num_docs']
-                    var[s]['d_max'] = s_data[u'docs'][u'max_doc']
-                    var[s]['d_del'] = s_data[u'docs'][u'deleted_docs']
-                    print s_content % var[s]
+                if out['state'] == 'close':
+                    out['status'] = 'closed'
+                else:
+                    out['status'] = health[index][u'status']
 
-            else:
-                content = ('Name: %(name)s\n'
-                           '\t Size Status:\n'
-                           '\t\t Primary Size: %(s_pri)s\n'
-                           '\t Document Status:\n'
-                           '\t\t Number Of Docs (Current): %(d_cur)s\n'
-                           '\t Merge Status:\n'
-                           '\t\t Total Merges: %(m_total)s')
-                var['name'] = indexname
-                var['s_pri'] = res[u'index'][u'primary_size']
-                var['d_cur'] = res[u'docs'][u'num_docs']
-                var['m_total'] = res[u'merges'][u'total']
-                print content % var
+                settings = state[index]['settings']
+                out['shards'] = settings['index.number_of_shards']
+                out['replicas'] = settings['index.number_of_replicas']
 
-        except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionIndexError('Error Fetching Index Status - %s' % (e))
-
-    def index_list(self, host, port, extended):
-        ''' List Indexes '''
-
-        try:
-            print 'SUCCESS: Listing Indexes'
-            for index in self._state:
-                print '\t Name: %s' % (index)
-
-                if extended:
-                    var = {}
-
-                    if self._state[index][u'state'] == 'close':
-                        status = 'closed'
-                    else:
-                        status = self._health[index][u'status']
-
-                    var['state'] = self._state[index][u'state']
-                    var['status'] = status
-                    settings = self._state[index][u'settings']
-                    var['shards'] = settings[u'index.number_of_shards']
-                    var['replicas'] = settings[u'index.number_of_replicas']
-                    content = ('\t\t State: %(state)s\n'
-                               '\t\t Status: %(status)s\n'
-                               '\t\t Number Of Shards: %(shards)s\n'
-                               '\t\t Number Of Replicas: %(replicas)s')
-                    print content % var
-
-        except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionIndexError('Error Listing Indexes - %s' % (e))
+            output[index] = out
+        return output
