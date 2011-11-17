@@ -16,7 +16,6 @@
 
 #!/usr/bin/env python
 
-import index
 import cluster
 import node
 import argparse
@@ -26,6 +25,7 @@ from exceptions import ActionIndexError
 from exceptions import ActionNodeError
 from exceptions import ActionClusterError
 from config import configuration
+from index import indexing
 
 VERSION = __import__('daikon').__version__
 
@@ -173,9 +173,16 @@ def main():
         config = configuration(args)
         config.config_setup()
 
+        index = indexing(args)
+
         if hasattr(args, 'subparser_index_name'):
             if args.subparser_index_name == 'list':
+                index.index_setup(config.host(), config.port())
                 index.index_list(config.host(), config.port(), args.extended)
+            if args.subparser_index_name == 'status':
+                index.index_setup(config.host(), config.port())
+                index.index_status(config.host(), config.port(),
+                        args.subparser_index_status_indexname, args.extended)
             if args.subparser_index_name == 'create':
                 index.index_create(config.host(), config.port(),
                         args.subarser_index_create_indexname, config.shards(),
@@ -189,10 +196,6 @@ def main():
             if args.subparser_index_name == 'close':
                 index.index_close(config.host(), config.port(),
                         args.subparser_index_close_indexname)
-            if args.subparser_index_name == 'status':
-                index.index_status(config.host(), config.port(),
-                        args.subparser_index_status_indexname, args.extended,
-                        args.display)
         elif hasattr(args, 'subparser_cluster_name'):
             if args.subparser_cluster_name == 'status':
                 cluster.cluster_status(config.cluster(), config.host(),
