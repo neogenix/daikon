@@ -21,7 +21,7 @@ import urllib2
 from exceptions import ActionIndexError
 
 
-class Indexing:
+class Index:
 
     def __init__(self, arguments):
         self.arguments = arguments

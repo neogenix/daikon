@@ -24,8 +24,10 @@ from exceptions import ConfigError
 from exceptions import ActionIndexError
 from exceptions import ActionNodeError
 from exceptions import ActionClusterError
-from config import configuration
-from index import indexing
+from config import Config
+from index import Index
+from node import Node
+from cluster import Cluster
 
 VERSION = __import__('daikon').__version__
 
@@ -170,12 +172,11 @@ def main():
     args = parser_main.parse_args()
 
     try:
-        config = Configuration(args)
+        config = Config(args)
         config.config_setup()
 
-        index = Indexing(args)
-
         if hasattr(args, 'subparser_index_name'):
+            index = Index(args)
             if args.subparser_index_name == 'list':
                 index.index_setup(config.host(), config.port())
                 index.index_list(config.host(), config.port(), args.extended)
@@ -196,14 +197,8 @@ def main():
             if args.subparser_index_name == 'close':
                 index.index_close(config.host(), config.port(),
                         args.subparser_index_close_indexname)
-        elif hasattr(args, 'subparser_cluster_name'):
-            if args.subparser_cluster_name == 'status':
-                cluster.cluster_status(config.cluster(), config.host(),
-                        config.port(), args.extended)
-            if args.subparser_cluster_name == 'shutdown':
-                cluster.cluster_shutdown(config.cluster(), config.host(),
-                        config.port())
         elif hasattr(args, 'subparser_node_name'):
+            node = Node(args)
             if args.subparser_node_name == 'shutdown':
                 node.node_shutdown(args.subparser_node_shutdown_hostname,
                         config.port(), args.delay)
@@ -212,6 +207,14 @@ def main():
                         config.port(), args.extended)
             if args.subparser_node_name == 'list':
                 node.node_list(config.host(), config.port(), args.extended)
+        elif hasattr(args, 'subparser_cluster_name'):
+            cluster = Cluster(args)
+            if args.subparser_cluster_name == 'status':
+                cluster.cluster_status(config.cluster(), config.host(),
+                        config.port(), args.extended)
+            if args.subparser_cluster_name == 'shutdown':
+                cluster.cluster_shutdown(config.cluster(), config.host(),
+                        config.port())
 
     except ConfigError as error:
         print error

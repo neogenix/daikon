@@ -22,7 +22,7 @@ import anyjson as json
 from exceptions import ConfigError
 
 
-class Configuration:
+class Config:
 
     def __init__(self, arguments):
         self.arguments = arguments

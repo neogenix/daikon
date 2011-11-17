@@ -20,80 +20,82 @@ import urllib2
 
 from exceptions import ActionNodeError
 
+class Node:
 
-def node_status(host, port, extended):
-    try:
-        request_url = 'http://%s:%s/_cluster/nodes/_local/stats' % (host, port)
-        request = requests.get(request_url)
-        request.raise_for_status()
-        print 'SUCCESS: Fetching Index Status : "%s"\n' % (host)
+    def __init__(self, arguments):
+        self.arguments = arguments
 
-        data_result = json.loads(request.content)
-        for node in data_result[u'nodes']:
-            print '\t Status:'
-            print '\t\t Node Status:'
-            print '\t\t\t Cluster: %s' % (data_result[u'cluster_name'])
-            print '\t\t\t ID: %s' % (node)
-            if extended:
-                print '\t\t\t Name: %s' % \
-                        (data_result[u'nodes'][node][u'name'])
+    def node_status(self, host, port, extended):
+        try:
+            request_url = 'http://%s:%s/_cluster/nodes/_local/stats' % (host, port)
+            request = requests.get(request_url)
+            request.raise_for_status()
+            print 'SUCCESS: Fetching Index Status : "%s"\n' % (host)
 
-            print '\t\t Index Status:'
-            print '\t\t\t Size: %s' % \
-                    (data_result[u'nodes'][node][u'indices'][u'store'][u'size'])
-            if extended:
-                print '\t\t\t Get (Total): %s' % \
-                        (data_result[u'nodes'][node][u'indices'][u'get'][u'total'])
-                print '\t\t\t Get (Time): %s' % \
-                        data_result[u'nodes'][node][u'indices'][u'get'][u'time']
-                print '\t\t\t Searches (Total): %s' % \
-                        (data_result[u'nodes'][node][u'indices'][u'search'][u'query_total'])
-                print '\t\t\t Searches (Time): %s' % \
-                        (data_result[u'nodes'][node][u'indices'][u'search'][u'query_time'])
+            data_result = json.loads(request.content)
+            for node in data_result[u'nodes']:
+                print '\t Status:'
+                print '\t\t Node Status:'
+                print '\t\t\t Cluster: %s' % (data_result[u'cluster_name'])
+                print '\t\t\t ID: %s' % (node)
+                if extended:
+                    print '\t\t\t Name: %s' % \
+                            (data_result[u'nodes'][node][u'name'])
 
-            if extended:
-                print '\t\t OS Status:'
-                print '\t\t\t Uptime: %s' % \
-                        (data_result[u'nodes'][node][u'os'][u'uptime'])
-                print '\t\t\t Load Average: %s' % \
-                        (data_result[u'nodes'][node][u'os'][u'load_average'])
-                print '\t\t\t Memory Status:'
-                print '\t\t\t\t Memory (Free): %s' % \
-                        (data_result[u'nodes'][node][u'os'][u'mem'][u'free'])
-                print '\t\t\t\t Memory (Used): %s' % \
-                        (data_result[u'nodes'][node][u'os'][u'mem'][u'used'])
-                print '\t\t\t Swap Status:'
-                print '\t\t\t\t Swap (Free): %s' % \
-                        (data_result[u'nodes'][node][u'os'][u'swap'][u'free'])
-                print '\t\t\t\t Swap (Used): %s' % \
-                        (data_result[u'nodes'][node][u'os'][u'swap'][u'used'])
-    except (requests.RequestException, urllib2.HTTPError), e:
-        raise ActionNodeError('Error Fetching Node Status - %s' % (e))
+                print '\t\t Index Status:'
+                print '\t\t\t Size: %s' % \
+                        (data_result[u'nodes'][node][u'indices'][u'store'][u'size'])
+                if extended:
+                    print '\t\t\t Get (Total): %s' % \
+                            (data_result[u'nodes'][node][u'indices'][u'get'][u'total'])
+                    print '\t\t\t Get (Time): %s' % \
+                            data_result[u'nodes'][node][u'indices'][u'get'][u'time']
+                    print '\t\t\t Searches (Total): %s' % \
+                            (data_result[u'nodes'][node][u'indices'][u'search'][u'query_total'])
+                    print '\t\t\t Searches (Time): %s' % \
+                            (data_result[u'nodes'][node][u'indices'][u'search'][u'query_time'])
 
+                if extended:
+                    print '\t\t OS Status:'
+                    print '\t\t\t Uptime: %s' % \
+                            (data_result[u'nodes'][node][u'os'][u'uptime'])
+                    print '\t\t\t Load Average: %s' % \
+                            (data_result[u'nodes'][node][u'os'][u'load_average'])
+                    print '\t\t\t Memory Status:'
+                    print '\t\t\t\t Memory (Free): %s' % \
+                            (data_result[u'nodes'][node][u'os'][u'mem'][u'free'])
+                    print '\t\t\t\t Memory (Used): %s' % \
+                            (data_result[u'nodes'][node][u'os'][u'mem'][u'used'])
+                    print '\t\t\t Swap Status:'
+                    print '\t\t\t\t Swap (Free): %s' % \
+                            (data_result[u'nodes'][node][u'os'][u'swap'][u'free'])
+                    print '\t\t\t\t Swap (Used): %s' % \
+                            (data_result[u'nodes'][node][u'os'][u'swap'][u'used'])
+        except (requests.RequestException, urllib2.HTTPError), e:
+            raise ActionNodeError('Error Fetching Node Status - %s' % (e))
 
-def node_list(host, port, extended):
-    try:
-        request_url = 'http://%s:%s/_cluster/state' % (host, port)
-        request = requests.get(request_url)
-        print 'SUCCESS: Fetching Node List :\n'
+    def node_list(self, host, port, extended):
+        try:
+            request_url = 'http://%s:%s/_cluster/state' % (host, port)
+            request = requests.get(request_url)
+            print 'SUCCESS: Fetching Node List :\n'
 
-        data_result = json.loads(request.content)[u'nodes']
-        print '\t Nodes:'
-        for node in data_result:
-            print '\t\t Node:', node
-            if extended:
-                print '\t\t\t Name:', data_result[node][u'name']
-                print '\t\t\t Transport Address:', data_result[node][u'transport_address']
-    except (requests.RequestException, urllib2.HTTPError), e:
-        raise ActionNodeError('Error Fetching Node List - %s' % (e))
+            data_result = json.loads(request.content)[u'nodes']
+            print '\t Nodes:'
+            for node in data_result:
+                print '\t\t Node:', node
+                if extended:
+                    print '\t\t\t Name:', data_result[node][u'name']
+                    print '\t\t\t Transport Address:', data_result[node][u'transport_address']
+        except (requests.RequestException, urllib2.HTTPError), e:
+            raise ActionNodeError('Error Fetching Node List - %s' % (e))
 
-
-def node_shutdown(host, port, delay):
-    try:
-        request_url = 'http://%s:%s/_cluster/nodes/_local/_shutdown?delay=%ss' \
-                % (host, port, delay)
-        request = requests.post(request_url)
-        request.raise_for_status()
-        print 'SUCCESS: Shutting Down Node : "' + host + '"'
-    except (requests.RequestException, urllib2.HTTPError), e:
-        raise ActionNodeError('Error Shutting Down Node - %s' % (e))
+    def node_shutdown(self, host, port, delay):
+        try:
+            request_url = 'http://%s:%s/_cluster/nodes/_local/_shutdown?delay=%ss' \
+                    % (host, port, delay)
+            request = requests.post(request_url)
+            request.raise_for_status()
+            print 'SUCCESS: Shutting Down Node : "' + host + '"'
+        except (requests.RequestException, urllib2.HTTPError), e:
+            raise ActionNodeError('Error Shutting Down Node - %s' % (e))
