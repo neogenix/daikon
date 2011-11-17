@@ -20,6 +20,7 @@ import urllib2
 
 from exceptions import ActionNodeError
 
+
 class Node:
 
     def __init__(self, arguments):
@@ -72,14 +73,16 @@ class Node:
                     var['size'] = res_n[u'indices'][u'store'][u'size']
                     var['get_total'] = res_n[u'indices'][u'get'][u'total']
                     var['get_time'] = res_n[u'indices'][u'get'][u'time']
-                    var['search_total'] = res_n[u'indices'][u'search'][u'query_total']
-                    var['search_time'] = res_n[u'indices'][u'search'][u'query_time']
-                    var['uptime'] = res_n[u'os'][u'uptime']
-                    var['load_ave'] = res_n[u'os'][u'load_average']
-                    var['mem_free'] = res_n[u'os'][u'mem'][u'free']
-                    var['mem_used'] = res_n[u'os'][u'mem'][u'used']
-                    var['swap_free'] = res_n[u'os'][u'swap'][u'free']
-                    var['swap_used'] = res_n[u'os'][u'swap'][u'used']
+                    search = res_n[u'indices'][u'search']
+                    var['search_total'] = search[u'query_total']
+                    var['search_time'] = search[u'query_time']
+                    os = res_n[u'os']
+                    var['uptime'] = os[u'uptime']
+                    var['load_ave'] = os[u'load_average']
+                    var['mem_free'] = os[u'mem'][u'free']
+                    var['mem_used'] = os[u'mem'][u'used']
+                    var['swap_free'] = os[u'swap'][u'free']
+                    var['swap_used'] = os[u'swap'][u'used']
                     print content % var
 
         except (requests.RequestException, urllib2.HTTPError), e:
