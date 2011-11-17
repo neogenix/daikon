@@ -27,8 +27,8 @@ class Index(object):
 
     def create(self, index_name, shards, replicas):
         try:
-            data = {"settings" : {"number_of_shards" : shards,
-                                  "number_of_replicas" : replicas}}
+            data = {"settings": {"number_of_shards": shards,
+                                 "number_of_replicas": replicas}}
             self._connection.post(index_name, data)
         except (requests.RequestException, urllib2.HTTPError), e:
             msg = 'Error Creating Index - %s' % (e)
@@ -69,43 +69,52 @@ class Index(object):
             msg = 'Error Fetching Index Status - %s' % (e)
             raise exceptions.ActionIndexError(msg)
 
-        status = res['indicies'][index_name]
-
         output = {}
         size = {}
         doc = {}
         merge = {}
 
-        output['Name'] = index_name
-        output['Size Status'] = size
-        output['Document Status'] = doc
-        output['Merge Status'] = merge
+        if index_name not in res['indices']:
+            output['Status'] = 'Closed'
+            return {index_name: output}
+        else:
+            output['Status'] = 'Open'
 
-        size['Primary Size'] = status['index']['primary_size']
-        doc['Docs (Current)'] = status['docs']['num_docs']
-        merge['Total Merges'] = status['merges']['total']
+        output['Size'] = size
+        output['Documents'] = doc
+        output['Merge'] = merge
+
+        status = res['indices'][index_name]
+
+        size['Primary'] = status['index']['primary_size']
+        doc['Current'] = status['docs']['num_docs']
+        merge['Total'] = status['merges']['total']
 
         if extended:
-            size['Total Size'] = status['index']['size']
+            size['Total'] = status['index']['size']
 
-            doc['Docs (Max)'] = status['docs']['max_doc']
-            doc['Docs (Deleted)'] = status['docs']['deleted_docs']
+            doc['Max'] = status['docs']['max_doc']
+            doc['Deleted'] = status['docs']['deleted_docs']
 
-            merge['Current Merges'] = status['merges']['current']
+            merge['Current'] = status['merges']['current']
 
             shards = {}
-            for shard, value  in status['shards'].iteritems:
+            for shard, value  in status['shards'].iteritems():
                 s_data = {}
+                value = value[0]
                 s_data['State'] = value['routing']['state']
                 s_data['Size'] = value['index']['size']
-                s_data['Docs (Current)'] = value['docs']['num_docs']
-                s_data['Docs (Max)'] = value['docs']['max_doc']
-                s_data['Docs (Deleted)'] = value[u'docs']['deleted_docs']
-                shards[shard] = s_data
 
-            output['Shard Status'] = shards
-        return output
+                s_docs = {}
+                s_docs['Current'] = value['docs']['num_docs']
+                s_docs['Max'] = value['docs']['max_doc']
+                s_docs['Deleted'] = value[u'docs']['deleted_docs']
 
+                s_data['Documents'] = s_docs
+                shards['Shard %s' % shard] = s_data
+
+            output['Shards'] = shards
+        return {index_name: output}
 
     def list(self, extended=False):
         try:
