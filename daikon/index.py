@@ -29,6 +29,8 @@ class Indexing:
         self._health = None
 
     def index_setup(self, host, port):
+        ''' Setup Health and Status info fetches '''
+
         try:
             if self._health is None:
                 h_url = 'http://%s:%s/_cluster/health?level=indices' \
@@ -47,6 +49,8 @@ class Indexing:
             raise ActionIndexError('Error Setting Up Indexes - %s' % (e))
 
     def index_create(self, host, port, indexname, shards, replicas):
+        ''' Creat Indexes Here '''
+
         try:
             res_data = json.dumps('{"settings" : { "number_of_shards" : %s, \
                     "number_of_replicas" : %s } }') % (shards, replicas)
@@ -54,44 +58,55 @@ class Indexing:
             res = requests.post(res_url, data=res_data)
             res.raise_for_status()
             print 'SUCCESS: Creating Index : "%s"' % (indexname)
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Creating Index - %s' % (e))
 
     def index_delete(self, host, port, indexname):
+        ''' Delete Indexes Here '''
+
         try:
             res_url = 'http://%s:%s/%s' % (host, port, indexname)
             res = requests.delete(res_url)
             res.raise_for_status()
             print 'SUCCESS: Deleting Index : "%s"' % (indexname)
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Deleting Index - %s' % (e))
 
     def index_open(self, host, port, indexname):
+        ''' Open Indexes Here '''
+
         try:
             res_url = 'http://%s:%s/%s/_open' % (host, port, indexname)
             res = requests.post(res_url)
             res.raise_for_status()
             print 'SUCCESS: Opening Index : "%s"' % (indexname)
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Opening Index - %s' % (e))
 
     def index_close(self, host, port, indexname):
+        ''' Close Indexes Here '''
         try:
             res_url = 'http://%s:%s/%s/_close' % (host, port, indexname)
             res = requests.post(res_url)
             res.raise_for_status()
             print 'SUCCESS: Closing Index : "%s"' % (indexname)
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Closing Index - %s' % (e))
 
     def index_status(self, host, port, indexname, extended):
+        ''' Fetch Info and Status For an Index Here '''
+
         try:
             req_url = 'http://%s:%s/%s/_status' % (host, port, indexname)
             req = requests.get(req_url)
             req.raise_for_status()
             res = json.loads(req.content)[u'indices'][indexname]
-
             var = {}
+
             if extended:
                 content = ('Name: %(name)s\n'
                            '\t Size Status:\n'
@@ -120,6 +135,7 @@ class Indexing:
                              '\t\t\t Number Of Docs (Current): %(d_cur)s\n'
                              '\t\t\t Number Of Docs (Max): %(d_max)s\n'
                              '\t\t\t Number Of Docs (Deleted): %(d_del)s')
+
                 for s in res[u'shards']:
                     s_data = res[u'shards'][s][0]
                     var[s] = {}
@@ -130,6 +146,7 @@ class Indexing:
                     var[s]['d_max'] = s_data[u'docs'][u'max_doc']
                     var[s]['d_del'] = s_data[u'docs'][u'deleted_docs']
                     print s_content % var[s]
+
             else:
                 content = ('Name: %(name)s\n'
                            '\t Size Status:\n'
@@ -143,10 +160,13 @@ class Indexing:
                 var['d_cur'] = res[u'docs'][u'num_docs']
                 var['m_total'] = res[u'merges'][u'total']
                 print content % var
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Fetching Index Status - %s' % (e))
 
     def index_list(self, host, port, extended):
+        ''' List Indexes '''
+
         try:
             print 'SUCCESS: Listing Indexes'
             for index in self._state:
@@ -154,6 +174,7 @@ class Indexing:
 
                 if extended:
                     var = {}
+
                     if self._state[index][u'state'] == 'close':
                         status = 'closed'
                     else:
@@ -161,15 +182,14 @@ class Indexing:
 
                     var['state'] = self._state[index][u'state']
                     var['status'] = status
-
                     settings = self._state[index][u'settings']
                     var['shards'] = settings[u'index.number_of_shards']
                     var['replicas'] = settings[u'index.number_of_replicas']
-
                     content = ('\t\t State: %(state)s\n'
                                '\t\t Status: %(status)s\n'
                                '\t\t Number Of Shards: %(shards)s\n'
                                '\t\t Number Of Replicas: %(replicas)s')
                     print content % var
+
         except (requests.RequestException, urllib2.HTTPError), e:
             raise ActionIndexError('Error Listing Indexes - %s' % (e))

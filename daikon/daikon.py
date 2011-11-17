@@ -170,10 +170,10 @@ def main():
     args = parser_main.parse_args()
 
     try:
-        config = configuration(args)
+        config = Configuration(args)
         config.config_setup()
 
-        index = indexing(args)
+        index = Indexing(args)
 
         if hasattr(args, 'subparser_index_name'):
             if args.subparser_index_name == 'list':
