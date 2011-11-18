@@ -1,5 +1,5 @@
 #
-#   Copyright [2011] [Patrick Ancillotti]
+#   Copyright [2011] [Jason Koelker]
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
 #   limitations under the License.
 #
 
-__version__ = '1.0.7'
+from daikon.managers.cluster import Cluster
+from daikon.managers.index import Index
+from daikon.managers.node import Node
 
-from main import main
+__all__ = ['Cluster', 'Index', 'Node']
