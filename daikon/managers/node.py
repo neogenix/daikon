@@ -18,7 +18,7 @@ import requests
 import anyjson as json
 import urllib2
 
-from exceptions import ActionNodeError
+from daikon import exceptions
 
 
 class Node:
@@ -86,7 +86,8 @@ class Node:
                     print content % var
 
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionNodeError('Error Fetching Node Status - %s' % (e))
+            msg = 'Error Fetching Node Status - %s' % (e)
+            raise exceptions.ActionNodeError(msg)
 
     def node_list(self, host, port, extended):
         ''' List Nodes Here '''
@@ -110,7 +111,8 @@ class Node:
                     print content % var
 
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionNodeError('Error Fetching Node List - %s' % (e))
+            msg = 'Error Fetching Node List - %s' % (e)
+            raise exceptions.ActionNodeError(msg)
 
     def node_shutdown(self, host, port, delay):
         ''' Shutdown a Node Here '''
@@ -123,4 +125,5 @@ class Node:
             print 'SUCCESS: Shutting Down Node : "%s"' % (host)
 
         except (requests.RequestException, urllib2.HTTPError), e:
-            raise ActionNodeError('Error Shutting Down Node - %s' % (e))
+            msg = 'Error Shutting Down Node - %s' % (e)
+            raise exceptions.ActionNodeError(msg)

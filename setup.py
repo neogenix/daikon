@@ -74,7 +74,7 @@ setup(name='daikon',
         ],
         entry_points={
             'console_scripts':
-                ['daikon = daikon.daikon:main']
+                ['daikon = daikon:main']
         },
         cmdclass={
             'pep8': Pep8Command
