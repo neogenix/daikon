@@ -27,8 +27,8 @@ And even this should too, but you shouldn't use it... : ::
 Configuration
 -------------
 
-Configuration is defined in /etc/daikon/daikon.conf, or ~/.daikon.conf, and has
-the format : ::
+Configuration is defined in /etc/daikon/daikon.conf, or ~/daikon/.daikon.conf, and
+has the format : ::
 
     [default]
     host = localhost

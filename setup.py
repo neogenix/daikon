@@ -70,7 +70,7 @@ setup(name='daikon',
             'anyjson'
         ],
         data_files=[
-            ('/etc/daikon', ['daikon.conf'])
+            (os.path.join(os.path.expanduser("~"), ".daikon"), ['daikon.conf'])
         ],
         entry_points={
             'console_scripts':
