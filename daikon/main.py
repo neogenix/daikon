@@ -239,16 +239,16 @@ def main():
                 node.node_status(args.subparser_node_status_hostname,
                         conf.port(), args.extended)
             if args.subparser_node_name == 'list':
-                node.node_list(config.host(), config.port(), args.extended)
+                node.node_list(conf.host(), conf.port(), args.extended)
 
         elif hasattr(args, 'subparser_cluster_name'):
             cluster = managers.Cluster(args)
             if args.subparser_cluster_name == 'status':
-                cluster.cluster_status(config.cluster(), config.host(),
-                        config.port(), args.extended)
+                cluster.cluster_status(conf.cluster(), conf.host(),
+                        conf.port(), args.extended)
             if args.subparser_cluster_name == 'shutdown':
-                cluster.cluster_shutdown(config.cluster(), config.host(),
-                        config.port())
+                cluster.cluster_shutdown(conf.cluster(), conf.host(),
+                        conf.port())
 
     except exceptions.ConfigError as error:
         print error
