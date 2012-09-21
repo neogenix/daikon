@@ -14,15 +14,30 @@
 #   limitations under the License.
 #
 
+import os
 from setuptools import setup, find_packages
+
+here = os.path.abspath(os.path.dirname(__file__))
+README = open(os.path.join(here, "README.rst")).read()
+HISTORY = open(os.path.join(here, "HISTORY.rst")).read()
+
+install_requires = [
+    'requests',
+    'anyjson'
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+]
 
 
 setup(
     name='daikon',
     version=__import__('daikon').__version__,
     description='ElasticSearch CLI',
-    long_description=''' ''',
-    classifiers=[],
+    long_description="\n" + README + "\n\n" + HISTORY,
+    classifiers=classifiers,
     keywords='',
     author='Patrick Ancillotti',
     author_email='patrick@eefy.net',
@@ -37,10 +52,7 @@ setup(
     ),
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
-        'requests',
-        'anyjson'
-    ],
+    install_requires=install_requires,
     data_files=[
         ('/etc/daikon', ['daikon.conf'])
     ],

@@ -1,5 +1,5 @@
 include daikon.conf
 include LICENSE
-include AUTHORS
+include AUTHORS.rst
 include HISTORY.rst
 include README.rst
