@@ -99,7 +99,7 @@ class Index(object):
             merge['Current'] = status['merges']['current']
 
             shards = {}
-            for shard, value  in status['shards'].iteritems():
+            for shard, value in status['shards'].iteritems():
                 s_data = {}
                 value = value[0]
                 s_data['State'] = value['routing']['state']

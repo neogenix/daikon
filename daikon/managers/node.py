@@ -29,7 +29,7 @@ class Node:
     def node_status(self, host, port, extended):
         try:
             req_url = 'http://%s:%s/_cluster/nodes/_local/stats' \
-                    % (host, port)
+                      % (host, port)
             req = requests.get(req_url)
             req.raise_for_status()
             res = json.loads(req.content)

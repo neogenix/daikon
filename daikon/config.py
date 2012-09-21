@@ -38,8 +38,9 @@ class Configuration(object):
 
         self.config_parser = ConfigParser.ConfigParser()
 
-        if not self.config_parser.read(['/etc/daikon/daikon.conf',
-                os.path.expanduser('~/.daikon.conf'), 'daikon.conf']):
+        if not self.config_parser.read(
+                ['/etc/daikon/daikon.conf',
+                    os.path.expanduser('~/.daikon.conf'), 'daikon.conf']):
             msg = 'No config file found!'
             raise exceptions.ConfigError(msg)
         elif not self.config_parser.has_section(self.cluster()):

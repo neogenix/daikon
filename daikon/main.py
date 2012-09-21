@@ -51,11 +51,10 @@ def print_output(output, vars=None, level=0):
 
 
 def main():
-    parser_main = argparse.ArgumentParser(description='ElasticSearch CLI v'
-            + VERSION)
-
+    parser_main = argparse.ArgumentParser(description='ElasticSearch CLI v%s'
+                                          % (VERSION))
     parser_main.add_argument('--version', action='version',
-            version=VERSION)
+                             version=VERSION)
 
     parser_main.add_argument('--cluster')
     parser_main.add_argument('--host')

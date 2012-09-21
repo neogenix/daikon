@@ -28,8 +28,8 @@ class Cluster:
 
     def cluster_status(self, cluster, host, port, extended):
         try:
-            request_health_url = 'http://%s:%s/_cluster/health?level=indices' % \
-                    (host, port)
+            request_health_url = 'http://%s:%s/_cluster/health?level=indices' \
+                    % (host, port)
             request_health = requests.get(request_health_url)
             request_health.raise_for_status()
 
@@ -58,9 +58,11 @@ class Cluster:
                     index_result = result_state[u'metadata'][u'indices'][index]
                     print '\t\t\t State: %s' % (index_result[u'state'])
                     print '\t\t\t Replicas: %s' % \
-                            (index_result[u'settings'][u'index.number_of_replicas'])
+                            (index_result[u'settings']
+                                    [u'index.number_of_replicas'])
                     print '\t\t\t Shards: %s' % \
-                            (index_result[u'settings'][u'index.number_of_shards'])
+                            (index_result[u'settings']
+                                    [u'index.number_of_shards'])
                     if index_result[u'state'] == 'close':
                         print '\t\t\t Status: CLOSED'
                     else:
@@ -74,7 +76,8 @@ class Cluster:
                     print '\t\t\t Name: %s' % \
                             (result_state[u'nodes'][node][u'name'])
                     print '\t\t\t Transport Address: %s' % \
-                            (result_state[u'nodes'][node][u'transport_address'])
+                            (result_state[u'nodes'][node]
+                                    [u'transport_address'])
 
         except (requests.RequestException, urllib2.HTTPError), e:
             msg = 'Error Fetching Cluster Status - %s' % (e)
