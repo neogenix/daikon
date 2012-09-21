@@ -14,6 +14,6 @@
 #   limitations under the License.
 #
 
-__version__ = '1.0.7'
-
 from main import main
+
+__version__ = '1.0.7'
