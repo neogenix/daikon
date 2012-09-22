@@ -34,7 +34,7 @@ classifiers = [
 
 setup(
     name='daikon',
-    version='1.10'
+    version='1.10',
     description='ElasticSearch CLI',
     long_description="\n" + README + "\n\n" + HISTORY,
     classifiers=classifiers,

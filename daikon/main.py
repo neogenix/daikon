@@ -74,7 +74,7 @@ def main():
     # index create
 
     subparser_index_create = subparser_index.add_parser('create')
-    subparser_index_create.add_argument('subarser_index_create_indexname',
+    subparser_index_create.add_argument('subparser_index_create_indexname',
             metavar='indexname')
     subparser_index_create.add_argument('--cluster')
     subparser_index_create.add_argument('--shards')
