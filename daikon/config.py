@@ -22,7 +22,7 @@ import anyjson as json
 from daikon import exceptions
 
 
-class Configuration(object):
+class Config(object):
 
     def __init__(self, arguments):
         self.arguments = arguments

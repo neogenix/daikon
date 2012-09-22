@@ -54,13 +54,14 @@ def main():
         parse = parser.Parser(VERSION)
         parse.setup()
         args = parse.get_results()
-        conf = config.Configuration(args)
+
+        conf = config.Config(args)
         conf.setup()
 
         conn = connection.Connection(conf.host(), conf.port())
 
-        if hasattr(args, 'sub_index_name'):
-            action = args.sub_index_name
+        if hasattr(args, 'index_name'):
+            action = args.index_name
             index = managers.Index(conn)
 
             if action == 'list':
@@ -69,49 +70,49 @@ def main():
                 print_output(output, level=1)
 
             if action == 'status':
-                index_name = args.sub_index_status_indexname
+                index_name = args.index_status_indexname
                 output = index.status(index_name, args.extended)
                 print_output(output)
 
             if action == 'create':
-                index_name = args.sub_index_create_indexname
+                index_name = args.index_create_indexname
                 shards = conf.shards()
                 replicas = conf.replicas()
                 output = index.create(index_name, shards, replicas)
                 print_output('SUCCESS: Creating Index : "%s"',  output)
 
             if action == 'delete':
-                index_name = args.sub_index_delete_indexname
+                index_name = args.index_delete_indexname
                 output = index.delete(index_name)
                 print_output('SUCCESS: Deleting Index : "%s"', output)
 
             if action == 'open':
-                index_name = args.sub_index_open_indexname
+                index_name = args.index_open_indexname
                 output = index.open(index_name)
                 print_output('SUCCESS: Opening Index : "%s"', output)
 
             if action == 'close':
-                index_name = args.sub_index_close_indexname
+                index_name = args.index_close_indexname
                 output = index.close(index_name)
                 print_output('SUCCESS: Closing Index : "%s"', output)
 
-        elif hasattr(args, 'sub_node_name'):
+        elif hasattr(args, 'node_name'):
             node = managers.Node(args)
-            if args.sub_node_name == 'shutdown':
-                node.node_shutdown(args.sub_node_shutdown_hostname,
+            if args.node_name == 'shutdown':
+                node.node_shutdown(args.node_shutdown_hostname,
                         conf.port(), args.delay)
-            if args.sub_node_name == 'status':
-                node.node_status(args.sub_node_status_hostname,
+            if args.node_name == 'status':
+                node.node_status(args.node_status_hostname,
                         conf.port(), args.extended)
-            if args.sub_node_name == 'list':
+            if args.node_name == 'list':
                 node.node_list(conf.host(), conf.port(), args.extended)
 
-        elif hasattr(args, 'sub_cluster_name'):
+        elif hasattr(args, 'cluster_name'):
             cluster = managers.Cluster(args)
-            if args.sub_cluster_name == 'status':
+            if args.cluster_name == 'status':
                 cluster.cluster_status(conf.cluster(), conf.host(),
                         conf.port(), args.extended)
-            if args.sub_cluster_name == 'shutdown':
+            if args.cluster_name == 'shutdown':
                 cluster.cluster_shutdown(conf.cluster(), conf.host(),
                         conf.port())
 
