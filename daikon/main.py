@@ -25,7 +25,7 @@ from daikon import connection
 from daikon import exceptions
 
 
-VERSION = __import__('daikon').__version__
+VERSION = '1.10'
 
 
 def print_dict(output, level=0):
