@@ -14,8 +14,15 @@
 #   limitations under the License.
 #
 
+# ---------------------
+# Imports
+# ---------------------
+
 import os
 import types
+import sys
+import logging
+from time import time
 from pprint import pprint
 
 from daikon import managers
@@ -24,8 +31,25 @@ from daikon import connection
 from daikon import exceptions
 from daikon import parser
 
+# ---------------------
+# Variables
+# ---------------------
+
 VERSION = '1.10'
 
+# ---------------------
+# Logging
+# ---------------------
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+logging.basicConfig(level=logging.INFO, formatter=formatter)
+log = logging.getLogger('daikon')
+stime = time()
+
+
+# ---------------------
+# Functions
+# ---------------------
 
 def print_dict(output, level=0):
     for key, value in output.iteritems():
@@ -48,6 +72,10 @@ def print_output(output, vars=None, level=0):
         prefix = '\t' * level
     print prefix + output
 
+
+# ---------------------
+# Main
+# ---------------------
 
 def main():
     try:
@@ -125,6 +153,10 @@ def main():
             exceptions.ActionClusterError) as error:
         print error
         return 1
+    finally:
+        total_time = round(float(time() - stime), 3)
+        log.info('Execution Time: "%s" seconds' % total_time)
+        sys.exit()
 
 
 if __name__ == '__main__':
