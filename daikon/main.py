@@ -1,5 +1,6 @@
 #
 #   Copyright [2011] [Patrick Ancillotti]
+#   Copyright [2011] [Jason Kölker]
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -126,8 +127,8 @@ def main():
         print error
         return 1
     finally:
-        #total_time = round(float(time() - stime), 3)
-        #d.print_output('Execution Time: "%s" seconds', total_time)
+        total_time = round(float(time() - stime), 3)
+        d.print_output('Execution Time: "%s" seconds', total_time)
         sys.exit()
 
 

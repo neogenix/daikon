@@ -1,5 +1,6 @@
 #
 #   Copyright [2012] [Patrick Ancillotti]
+#   Copyright [2012] [Jason Kölker]
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -35,9 +36,9 @@ log = logging.getLogger('daikon')
 # Classes
 # ---------------------
 
-class Display():
+class Display(object):
 
-    def print_dict(output, level=0):
+    def print_dict(self, output, level=0):
         for key, value in output.iteritems():
             if isinstance(value, types.DictType):
                 Display.print_output(key, level=level)
@@ -45,7 +46,7 @@ class Display():
             else:
                 Display.print_output('%s: %s' % (key, value), level=level)
 
-    def print_output(output, vars=None, level=0):
+    def print_output(self, output, vars=None, level=0):
         if isinstance(output, types.ListType):
             output = os.linesep.join(output)
         elif isinstance(output, types.DictType):
