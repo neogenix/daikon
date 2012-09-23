@@ -107,7 +107,7 @@ def main():
                 d.print_output('SUCCESS: Closing Index : "%s"', output)
 
         elif hasattr(args, 'node_name'):
-            node = managers.Node(args)
+            node = managers.Node(args, d)
             if args.node_name == 'shutdown':
                 node.node_shutdown(args.node_shutdown_hostname,
                         conf.port(), args.delay)
@@ -118,7 +118,7 @@ def main():
                 node.node_list(conf.host(), conf.port(), args.extended)
 
         elif hasattr(args, 'cluster_name'):
-            cluster = managers.Cluster(args)
+            cluster = managers.Cluster(args, d)
             if args.cluster_name == 'status':
                 cluster.cluster_status(conf.cluster(), conf.host(),
                         conf.port(), args.extended)
