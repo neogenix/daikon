@@ -35,15 +35,21 @@ from daikon import parser
 # Variables
 # ---------------------
 
-VERSION = '1.10'
+VERSION = '1.50'
 
 # ---------------------
 # Logging
 # ---------------------
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
-logging.basicConfig(level=logging.INFO, formatter=formatter)
+log_format = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+log_stream = logging.StreamHandler()
+log_stream.setLevel(logging.INFO)
+log_stream.setFormatter(log_format)
+log_stream.addFilter('daikon')
+
 log = logging.getLogger('daikon')
+log.addHandler(log_stream)
+
 stime = time()
 
 
