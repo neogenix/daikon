@@ -18,13 +18,11 @@
 # Imports
 # ---------------------
 
-import os
-import types
 import sys
 import logging
 from time import time
-from pprint import pprint
 
+from daikon import display
 from daikon import managers
 from daikon import config
 from daikon import connection
@@ -48,45 +46,21 @@ stime = time()
 
 
 # ---------------------
-# Functions
-# ---------------------
-
-def print_dict(output, level=0):
-    for key, value in output.iteritems():
-        if isinstance(value, types.DictType):
-            print_output(key, level=level)
-            print_dict(value, level=level + 1)
-        else:
-            print_output('%s: %s' % (key, value), level=level)
-
-
-def print_output(output, vars=None, level=0):
-    if isinstance(output, types.ListType):
-        output = os.linesep.join(output)
-    elif isinstance(output, types.DictType):
-        return print_dict(output, level=level)
-    if vars is not None:
-        output = output % vars
-    prefix = ''
-    if level > 0:
-        prefix = '\t' * level
-    print prefix + output
-
-
-# ---------------------
 # Main
 # ---------------------
 
 def main():
     try:
-        parse = parser.Parser(VERSION)
-        parse.setup()
-        args = parse.get_results()
+        p = parser.Parser(VERSION)
+        p.setup()
+        args = p.get_results()
 
         conf = config.Config(args)
         conf.setup()
 
         conn = connection.Connection(conf.host(), conf.port())
+
+        d = display.Display()
 
         if hasattr(args, 'index_name'):
             action = args.index_name
@@ -94,35 +68,35 @@ def main():
 
             if action == 'list':
                 output = index.list(args.extended)
-                print_output('SUCCESS: Listing Indexes')
-                print_output(output, level=1)
+                d.print_output('SUCCESS: Listing Indexes')
+                d.print_output(output, level=1)
 
             if action == 'status':
                 index_name = args.index_status_indexname
                 output = index.status(index_name, args.extended)
-                print_output(output)
+                d.print_output(output)
 
             if action == 'create':
                 index_name = args.index_create_indexname
                 shards = conf.shards()
                 replicas = conf.replicas()
                 output = index.create(index_name, shards, replicas)
-                print_output('SUCCESS: Creating Index : "%s"',  output)
+                d.print_output('SUCCESS: Creating Index : "%s"',  output)
 
             if action == 'delete':
                 index_name = args.index_delete_indexname
                 output = index.delete(index_name)
-                print_output('SUCCESS: Deleting Index : "%s"', output)
+                d.print_output('SUCCESS: Deleting Index : "%s"', output)
 
             if action == 'open':
                 index_name = args.index_open_indexname
                 output = index.open(index_name)
-                print_output('SUCCESS: Opening Index : "%s"', output)
+                d.print_output('SUCCESS: Opening Index : "%s"', output)
 
             if action == 'close':
                 index_name = args.index_close_indexname
                 output = index.close(index_name)
-                print_output('SUCCESS: Closing Index : "%s"', output)
+                d.print_output('SUCCESS: Closing Index : "%s"', output)
 
         elif hasattr(args, 'node_name'):
             node = managers.Node(args)
@@ -143,8 +117,6 @@ def main():
             if args.cluster_name == 'shutdown':
                 cluster.cluster_shutdown(conf.cluster(), conf.host(),
                         conf.port())
-
-        pprint(vars(args))
     except exceptions.ConfigError as error:
         print error
         return 1
@@ -154,8 +126,8 @@ def main():
         print error
         return 1
     finally:
-        total_time = round(float(time() - stime), 3)
-        log.info('Execution Time: "%s" seconds' % total_time)
+        #total_time = round(float(time() - stime), 3)
+        #d.print_output('Execution Time: "%s" seconds', total_time)
         sys.exit()
 
 
