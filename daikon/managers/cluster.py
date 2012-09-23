@@ -22,16 +22,23 @@
 
 import logging
 import requests
-import anyjson as json
 import urllib2
+import anyjson as json
 
 from daikon import exceptions
+from daikon import display
 
 # ---------------------
 # Logging
 # ---------------------
 
 log = logging.getLogger('daikon')
+
+# ---------------------
+# Objects
+# ---------------------
+
+d = display.Display()
 
 
 # ---------------------
@@ -54,25 +61,29 @@ class Cluster(object):
             request_state = requests.get(request_state_url)
             request_state.raise_for_status()
 
-            print 'SUCCESS: Fetching Cluster Status : "%s"\n' % (cluster)
-            result_state = json.loads(request_state.content)
-            result_health = json.loads(request_health.content)[u'indices']
-            master_node = result_state[u'master_node']
-            master_node_state = result_state[u'nodes'][master_node]
+            d.print_output('SUCCESS: Fetching Cluster Status : "%s"', cluster)
 
-            print '\t Information:'
-            print '\t\t Cluster Name: %s' % (result_state[u'cluster_name'])
-            print '\t\t Master Node: %s' % (result_state[u'master_node'])
+            r_state = json.loads(request_state.content)
+            r_health = json.loads(request_health.content)[u'indices']
+            master_node = r_state[u'master_node']
+            master_node_state = r_state[u'nodes'][master_node]
+
+            d.print_output('Information:', level=1)
+            d.print_output('Cluster Name: $s', r_state[u'cluster_name'],
+                           level=2)
+            d.print_output('Master Node: %s', r_state[u'master_node'],
+                           level=2)
+
             if extended:
                 print '\t\t\t Name: %s' % (master_node_state[u'name'])
                 print '\t\t\t Transport Address: %s' % \
                         (master_node_state[u'transport_address'])
 
             print '\t Indices:'
-            for index in result_state[u'metadata'][u'indices']:
+            for index in r_state[u'metadata'][u'indices']:
                 print '\t\t Name: %s' % (index)
                 if extended:
-                    index_result = result_state[u'metadata'][u'indices'][index]
+                    index_result = r_state[u'metadata'][u'indices'][index]
                     print '\t\t\t State: %s' % (index_result[u'state'])
                     print '\t\t\t Replicas: %s' % \
                             (index_result[u'settings']
@@ -84,16 +95,16 @@ class Cluster(object):
                         print '\t\t\t Status: CLOSED'
                     else:
                         print '\t\t\t Status: %s' % \
-                                (result_health[index][u'status'])
+                                (r_health[index][u'status'])
 
             print '\t Nodes:'
-            for node in result_state[u'nodes']:
+            for node in r_state[u'nodes']:
                 print '\t\t Node: %s' % (node)
                 if extended:
                     print '\t\t\t Name: %s' % \
-                            (result_state[u'nodes'][node][u'name'])
+                            (r_state[u'nodes'][node][u'name'])
                     print '\t\t\t Transport Address: %s' % \
-                            (result_state[u'nodes'][node]
+                            (r_state[u'nodes'][node]
                                     [u'transport_address'])
 
         except (requests.RequestException, urllib2.HTTPError), e:
