@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #   Copyright [2012] [Patrick Ancillotti]
 #   Copyright [2012] [Jason Kölker]
@@ -27,8 +28,6 @@ import logging
 # Logging
 # ---------------------
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
-logging.basicConfig(level=logging.INFO, formatter=formatter)
 log = logging.getLogger('daikon')
 
 
@@ -41,16 +40,16 @@ class Display(object):
     def print_dict(self, output, level=0):
         for key, value in output.iteritems():
             if isinstance(value, types.DictType):
-                Display.print_output(key, level=level)
-                Display.print_dict(value, level=level + 1)
+                self.print_output(key, level=level)
+                self.print_dict(value, level=level + 1)
             else:
-                Display.print_output('%s: %s' % (key, value), level=level)
+                self.print_output('%s: %s' % (key, value), level=level)
 
     def print_output(self, output, vars=None, level=0):
         if isinstance(output, types.ListType):
             output = os.linesep.join(output)
         elif isinstance(output, types.DictType):
-            return Display.print_dict(output, level=level)
+            return self.print_dict(output, level=level)
         if vars is not None:
             output = output % vars
         prefix = ''

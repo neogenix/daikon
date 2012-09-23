@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #   Copyright [2011] [Patrick Ancillotti]
 #   Copyright [2011] [Jason Kölker]

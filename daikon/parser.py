@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #   Copyright [2012] [Patrick Ancillotti]
 #   Copyright [2011] [Jason Kölker]
@@ -26,8 +27,6 @@ import argparse as arg
 # Logging
 # ---------------------
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
-logging.basicConfig(level=logging.INFO, formatter=formatter)
 log = logging.getLogger('daikon')
 
 

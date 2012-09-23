@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #   Copyright [2011] [Patrick Ancillotti]
 #   Copyright [2011] [Jason Kölker]
@@ -52,6 +53,8 @@ stime = time()
 
 def main():
     try:
+        d = display.Display()
+
         p = parser.Parser(VERSION)
         p.setup()
         args = p.get_results()
@@ -60,8 +63,6 @@ def main():
         conf.setup()
 
         conn = connection.Connection(conf.host(), conf.port())
-
-        d = display.Display()
 
         if hasattr(args, 'index_name'):
             action = args.index_name
@@ -118,6 +119,9 @@ def main():
             if args.cluster_name == 'shutdown':
                 cluster.cluster_shutdown(conf.cluster(), conf.host(),
                         conf.port())
+
+        total_time = round(float(time() - stime), 3)
+        d.print_output('Execution Time: "%s" seconds', total_time)
     except exceptions.ConfigError as error:
         print error
         return 1
@@ -127,8 +131,6 @@ def main():
         print error
         return 1
     finally:
-        total_time = round(float(time() - stime), 3)
-        d.print_output('Execution Time: "%s" seconds', total_time)
         sys.exit()
 
 
