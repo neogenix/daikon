@@ -14,10 +14,27 @@
 #   limitations under the License.
 #
 
+# ---------------------
+# Imports
+# ---------------------
+
+import logging
 import requests
 import anyjson as json
 import urlparse
 
+# ---------------------
+# Logging
+# ---------------------
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+logging.basicConfig(level=logging.INFO, formatter=formatter)
+log = logging.getLogger('daikon')
+
+
+# ---------------------
+# Classes
+# ---------------------
 
 class Connection(object):
     _state = None

@@ -14,6 +14,24 @@
 #   limitations under the License.
 #
 
+# ---------------------
+# Imports
+# ---------------------
+
+import logging
+
+# ---------------------
+# Logging
+# ---------------------
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+logging.basicConfig(level=logging.INFO, formatter=formatter)
+log = logging.getLogger('daikon')
+
+
+# ---------------------
+# Classes
+# ---------------------
 
 class DaikonError(Exception):
     ''' Base Exception Class '''

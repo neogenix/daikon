@@ -14,8 +14,25 @@
 #   limitations under the License.
 #
 
+# ---------------------
+# Imports
+# ---------------------
+
+import logging
 import argparse as arg
 
+# ---------------------
+# Logging
+# ---------------------
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+logging.basicConfig(level=logging.INFO, formatter=formatter)
+log = logging.getLogger('daikon')
+
+
+# ---------------------
+# Classes
+# ---------------------
 
 class Parser(object):
 

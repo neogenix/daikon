@@ -14,14 +14,31 @@
 #   limitations under the License.
 #
 
+# ---------------------
+# Imports
+# ---------------------
+
+import logging
 import requests
 import anyjson as json
 import urllib2
 
 from daikon import exceptions
 
+# ---------------------
+# Logging
+# ---------------------
 
-class Cluster:
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+logging.basicConfig(level=logging.INFO, formatter=formatter)
+log = logging.getLogger('daikon')
+
+
+# ---------------------
+# Classes
+# ---------------------
+
+class Cluster(object):
 
     def __init__(self, arguments):
         self.arguments = arguments
