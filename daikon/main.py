@@ -110,10 +110,10 @@ def main():
             node = managers.Node(args, d)
             if args.node_name == 'shutdown':
                 node.node_shutdown(args.node_shutdown_hostname,
-                        conf.port(), args.delay)
+                                   conf.port(), args.delay)
             if args.node_name == 'status':
                 node.node_status(args.node_status_hostname,
-                        conf.port(), args.extended)
+                                 conf.port(), args.extended)
             if args.node_name == 'list':
                 node.node_list(conf.host(), conf.port(), args.extended)
 
@@ -121,10 +121,10 @@ def main():
             cluster = managers.Cluster(args, d)
             if args.cluster_name == 'status':
                 cluster.cluster_status(conf.cluster(), conf.host(),
-                        conf.port(), args.extended)
+                                       conf.port(), args.extended)
             if args.cluster_name == 'shutdown':
                 cluster.cluster_shutdown(conf.cluster(), conf.host(),
-                        conf.port())
+                                         conf.port())
 
         total_time = round(float(time() - stime), 3)
         d.print_output('Execution Time: "%s" seconds', total_time)

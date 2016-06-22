@@ -87,11 +87,11 @@ class Cluster(object):
                                         level=3)
                     self.d.print_output('Replicas: %s',
                                         index_result[u'settings']
-                                            [u'index.number_of_replicas'],
+                                                    [u'index.number_of_replicas'],
                                         level=3)
                     self.d.print_output('Shards: %s',
                                         index_result[u'settings']
-                                            [u'index.number_of_shards'],
+                                                    [u'index.number_of_shards'],
                                         level=3)
 
                     if index_result[u'state'] == 'close':
@@ -110,7 +110,7 @@ class Cluster(object):
                                         level=3)
                     self.d.print_output('Transport Address: %s',
                                         r_state[u'nodes'][node]
-                                            [u'transport_address'],
+                                               [u'transport_address'],
                                         level=3)
 
         except (requests.RequestException, urllib2.HTTPError), e:

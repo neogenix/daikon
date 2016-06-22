@@ -83,11 +83,11 @@ class Node(object):
                                         level=3)
                     self.d.print_output('Searches (Total): %s',
                                         res_n[u'indices'][u'search']
-                                            [u'query_total'],
+                                             [u'query_total'],
                                         level=3)
                     self.d.print_output('Searches (Time): %s',
                                         res_n[u'indices'][u'search']
-                                            [u'query_time'],
+                                             [u'query_time'],
                                         level=3)
 
         except (requests.RequestException, urllib2.HTTPError), e:
