@@ -1,5 +1,10 @@
-Daikon
-======
+Daikon (Not actively maintained right now)
+==========================================
+
+Note:
+-----
+
+I'm likely going to rewrite this in golang over the next few months. Stay tuned :)
 
 Description
 -----------
